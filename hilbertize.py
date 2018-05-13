@@ -61,7 +61,7 @@ with open(args.files) as ff:
         fft = np.fft.rfft(row)
 
         #this is to check the spectrum and find the carrying freauency
-        #plt.plot(np.abs(fft)[10:]) #near-zero freqencies somehow are exremely large
+        plt.plot(np.abs(fft)[10:]) #near-zero freqencies somehow are exremely large
         #plt.savefig(args.output + "_fft_" + str(i) + ".png")
         #plt.clf()
 
@@ -69,7 +69,7 @@ with open(args.files) as ff:
             if not (args.freq_min <= j <= args.freq_max):
                 fft[j] = 0
         res_fft.append(np.abs(hilbert(np.fft.irfft(fft))))
-    #plt.savefig(args.output + "_spectrum_" + ".png")
+    plt.savefig(args.output + "_spectrum_" + ".png")
     #results -> 255 grayscale
     min_res_fft = min(map(min, res_fft))
     max_res_fft = max(map(max, res_fft))
@@ -126,7 +126,7 @@ with open(args.files) as ff:
                 r1v = interpolate(data[ray1][d1], data[ray1][d2], math.modf(d)[0])
                 r2v = interpolate(data[ray2][d1], data[ray2][d2], math.modf(d)[0])
                 v = interpolate(r1v, r2v, math.modf(a)[0])
-                new_data[i][j] = v
+                new_data[i][j] = v*v*v*v*v
             else:
                 new_data[i][j] = 0
     max_data = max(map(max, new_data))

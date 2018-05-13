@@ -8,15 +8,17 @@
 double ***values;
 double **res;
 
-int main()
+int main(int argc, char** argv)
 {
     int i, j, k, l, delayed;
 
-    int max_read = 800;
-    int rays_num = 200;
+    int max_read = 4000;
     int skip = 0;
     int max_length = max_read - skip;
-    double focus = 500;
+    double focus;
+    sscanf(argv[1], "%lf", &focus);
+    int rays_num;
+    sscanf(argv[2], "%d", &rays_num);
     double magic = 1.0;
     double tmp;
 
@@ -63,13 +65,13 @@ int main()
     for (i=0; i<rays_num; i++)
     {
         printf("%d of %d\n", i, rays_num);
-        double alpha = (M_PI*2.0/3.0/rays_num)*(rays_num/2-i);
+        double alpha = M_PI/6.0 + ((M_PI*2.0/3.0)/rays_num)*i;
         double s = sin(alpha);
         double c = cos(alpha);
         for (j=0; j<sensors; j++)
         {
             l = DX*(sensors/2 - j);
-            delay[j] = focus - sqrt(focus*c*focus*c + (focus*s - l)*(focus*s - l));
+            delay[j] = focus - sqrt(focus*focus*s*s + (focus*c - l)*(focus*c - l));//focus - sqrt(focus*c*focus*c + (focus*s - l)*(focus*s - l));
         }
 
         for (j=0; j<sensors; j++)

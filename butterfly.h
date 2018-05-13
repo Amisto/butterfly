@@ -16,19 +16,24 @@ using namespace std;
 #define DOTS_TOTAL              10
 #define VERTICES                5
 #define ZERO                    0.00001
-#define MINLEN                  7.5
+#define MINLEN                  1.5
 #define PI                      3.14159265
 #define VISIBILITY_THRESHOLD    0.01
-#define POINTS_IN_DOT_WAVEFRONT 20
+#define POINTS_IN_DOT_WAVEFRONT 50
 
 #define C0                      1
 
 #define SENSORS                 32
 #define DX_SENSORS              5
-#define DT_DIGITIZATION         5.0//0.0000001
-#define DT_CARRYING             15.0//0.0000003
-#define DT_WIDTH                105.0//0.0000021
-#define T_MULTIPLIER            0.2
+#define DT_DIGITIZATION         1.0//0.0000001
+#define DT_CARRYING             5.0//0.0000003
+#define DT_WIDTH                50.0//0.0000021
+#define T_MULTIPLIER            0.01
+#define DT_DETERIORATION        5.0
+#define DETERIORATION           0.999
+
+double CURRENT_DT_DETERIORATION = 0;
+
 #define DETERIORATION           0.999
 
 #define X			2000.0
@@ -663,11 +668,17 @@ void calc_a_step()
 
     //calculation_split_step = calculation_split_step == 3 ? 0 : calculation_split_step + 1;
 
+    CURRENT_DT_DETERIORATION += time;
+    while (CURRENT_DT_DETERIORATION > DT_DETERIORATION)
+    {
+        deteriorate();
+        CURRENT_DT_DETERIORATION -= DT_DETERIORATION;
+    }
+
     total_time += time;
     while (total_time > DT_DIGITIZATION)
     {
         if (T_START < 0) write_to_csv();
-        deteriorate();
         total_time -= DT_DIGITIZATION;
         T_START -= DT_DIGITIZATION;
         T_FINISH -= DT_DIGITIZATION;
