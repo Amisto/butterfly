@@ -1,4 +1,5 @@
 #include "butterfly.h"
+#include "phasing.c"
 
 int main(int argc, char** argv)
 {
@@ -25,10 +26,21 @@ int main(int argc, char** argv)
 
         T_START = SENSORS*DX_SENSORS*1.2/C0;
         T_FINISH = Y/C0;
+        written = 0;
 
         while(n_nodes > 0) calc_a_step();
         fclose(f_csv);
     }
+
+    FILE* setup = fopen("setup.txt", "r");
+    if (!setup)
+    {
+        printf("No file opened\n");
+        exit(-1);
+    }
+    fscanf(setup, "%d%lf", &rays_num, &focus);
+    fclose(setup);
+    phasing();
 
     finalize();
 

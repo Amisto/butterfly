@@ -16,7 +16,7 @@ using namespace std;
 #define DOTS_TOTAL              10
 #define VERTICES                5
 #define ZERO                    0.00001
-#define MINLEN                  1.5
+#define MINLEN                  4.5
 #define PI                      3.14159265
 #define VISIBILITY_THRESHOLD    0.01
 #define POINTS_IN_DOT_WAVEFRONT 50
@@ -25,10 +25,10 @@ using namespace std;
 
 #define SENSORS                 32
 #define DX_SENSORS              5
-#define DT_DIGITIZATION         1.0//0.0000001
-#define DT_CARRYING             5.0//0.0000003
-#define DT_WIDTH                50.0//0.0000021
-#define T_MULTIPLIER            0.01
+#define DT_DIGITIZATION         2.8//0.0000001
+#define DT_CARRYING             18.0//0.0000003
+#define DT_WIDTH                54.0//0.0000021
+#define T_MULTIPLIER            0.1
 #define DT_DETERIORATION        5.0
 #define DETERIORATION           0.999
 
@@ -91,6 +91,7 @@ struct Sensor
 } sensors[SENSORS];
 
 double total_time = 0;
+unsigned long int written = 0;
 
 //==================================================================================================================
 //=== basic math
@@ -225,6 +226,7 @@ void write_to_csv()
     }
 
     fprintf(f_csv, "\n");
+    written++;
 }
 
 //==================================================================================================================

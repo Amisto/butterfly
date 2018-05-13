@@ -15,30 +15,30 @@ parser.add_argument(
     help='List of CSV files with sensor data'
 )
 
-parser.add_argument(
-    '-m',
-    '--max-length',
-    default=9999,
-    type=int,
-    metavar='LEN',
-    help='Max length of sensor data'
-)
+#parser.add_argument(
+#    '-m',
+#    '--max-length',
+#    default=9999,
+#    type=int,
+#    metavar='LEN',
+#    help='Max length of sensor data'
+#)
 
-parser.add_argument(
-    '-s',
-    '--skip',
-    default=80,
-    type=int,
-    metavar='SKIP',
-    help='Number of points to skip'
-)
+#parser.add_argument(
+#    '-s',
+#    '--skip',
+#    default=80,
+#    type=int,
+#    metavar='SKIP',
+#    help='Number of points to skip'
+#)
 
 
 args = parser.parse_args()
 
 for fname in args.files:
     with open(fname) as f:
-        values = ([[abs(float(x)) for x in l.split()] for l in f.readlines()[args.skip:args.max_length]])
+        values = ([[abs(float(x)) for x in l.split()] for l in f.readlines()])#[args.skip:args.max_length]])
 
         max_v = max(map(max, values))
 
