@@ -13,8 +13,8 @@ using namespace std;
 //=== calc consts
 
 #define OBSTACLES_TOTAL         10
-#define DOTS_TOTAL              10
-#define VERTICES                5
+#define DOTS_TOTAL              100
+#define VERTICES                105
 #define ZERO                    0.00001
 #define MINLEN                  4.5
 #define PI                      3.14159265
@@ -24,11 +24,11 @@ using namespace std;
 #define C0                      1
 
 #define SENSORS                 32
-#define DX_SENSORS              5
+#define DX_SENSORS              10
 #define DT_DIGITIZATION         2.8//0.0000001
 #define DT_CARRYING             18.0//0.0000003
 #define DT_WIDTH                54.0//0.0000021
-#define T_MULTIPLIER            0.1
+#define T_MULTIPLIER            1.0
 #define DT_DETERIORATION        5.0
 #define DETERIORATION           0.999
 
@@ -740,7 +740,7 @@ void init_from_file()
     fscanf(f, "%d", &OBSTACLES);
     for (int i=0; i<OBSTACLES; i++)
     {
-        for (int j=0; j<VERTICES-1; j++)
+        for (int j=0; j<4; j++)
             if (fscanf(f, "%lf%lf", &obstacles[i].pos[j].x, &obstacles[i].pos[j].y) != 2)
             {
                 printf("Not enough obstacle data\n");
@@ -750,6 +750,19 @@ void init_from_file()
         {
             printf("Not enough obstacle data\n");
             exit(-1);
+        }
+
+        int SIN_VERTICES = VERTICES - 5;
+        double L = obstacles[i].pos[0].x - obstacles[i].pos[3].x;
+        double DL = L/SIN_VERTICES;
+        double AMP = 20;
+	    double PIES = 5;
+        double l;
+        for (int j=4; j<VERTICES - 1; j++)
+        {
+            l = DL*(j-3);
+            obstacles[i].pos[j].x = obstacles[i].pos[3].x + l; 
+            obstacles[i].pos[j].y = obstacles[i].pos[3].y + AMP*sin(l/L*M_PI*PIES);
         }
         obstacles[i].pos[VERTICES-1].x = obstacles[i].pos[0].x;
         obstacles[i].pos[VERTICES-1].y = obstacles[i].pos[0].y;
