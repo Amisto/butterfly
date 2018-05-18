@@ -31,7 +31,7 @@ void phasing()
     for (i=0; i<SENSORS; i++)
     {    
         sprintf(fname, "%03d.csv", i);
-        printf("reading %s\n", fname);
+        //printf("reading %s\n", fname);
         fi = fopen(fname, "r");
         if (!fi) {printf("no file"); exit(-1);}
         for (j=0; j<max_length; j++)
@@ -46,7 +46,7 @@ void phasing()
 
     for (i=0; i<rays_num; i++)
     {
-        printf("%d of %d\n", i, rays_num);
+        //printf("%d of %d\n", i, rays_num);
         double alpha = M_PI/6.0 + ((M_PI*2.0/3.0)/rays_num)*i;
         double s = sin(alpha);
         double c = cos(alpha);

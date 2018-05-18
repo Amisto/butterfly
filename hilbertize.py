@@ -57,7 +57,7 @@ with open(args.files) as ff:
     #Narrowband filtering + Hilbert transformation
     res_fft = []
     for i,row in enumerate(vals):
-        print("starting " + str(i) + " of " + str(len(vals)))
+        #print("starting " + str(i) + " of " + str(len(vals)))
         fft = np.fft.rfft(row)
 
         #this is to check the spectrum and find the carrying freauency
@@ -126,7 +126,7 @@ with open(args.files) as ff:
                 r1v = interpolate(data[ray1][d1], data[ray1][d2], math.modf(d)[0])
                 r2v = interpolate(data[ray2][d1], data[ray2][d2], math.modf(d)[0])
                 v = interpolate(r1v, r2v, math.modf(a)[0])
-                new_data[i][j] = v*v*v
+                new_data[i][j] = v*v#*v
             else:
                 new_data[i][j] = 0
     max_data = max(map(max, new_data))

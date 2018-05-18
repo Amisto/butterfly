@@ -25,11 +25,12 @@ int main(int argc, char** argv)
         init_explosion(X/2 - DX_SENSORS * (SENSORS / 2 - i), Y*0.999);
 
         T_START = SENSORS*DX_SENSORS*1.2/C0;
-        T_FINISH = Y/C0;
+        T_FINISH = 2.2*Y/C0;
         written = 0;
 
-        while(n_nodes > 0) calc_a_step();
+        while(T_FINISH > 0) calc_a_step();
         fclose(f_csv);
+        printf("%3dth sensor of %d calculated\n", i, SENSORS);
     }
 
     FILE* setup = fopen("setup.txt", "r");

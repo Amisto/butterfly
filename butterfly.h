@@ -24,7 +24,7 @@ using namespace std;
 #define C0                      1
 
 #define SENSORS                 32
-#define DX_SENSORS              10
+#define DX_SENSORS              5.625
 #define DT_DIGITIZATION         2.8//0.0000001
 #define DT_CARRYING             18.0//0.0000003
 #define DT_WIDTH                54.0//0.0000021
@@ -39,7 +39,7 @@ double CURRENT_DT_DETERIORATION = 0;
 #define X			2000.0
 #define Y			2000.0
 
-double T_START = SENSORS*DX_SENSORS*1.2/C0, T_FINISH = Y/C0;
+double T_START = SENSORS*DX_SENSORS*1.2/C0, T_FINISH = 2.2*Y/C0;
 
 //==================================================================================================================
 //=== basic data structs
@@ -157,7 +157,7 @@ void get_refracted(V2 a, V2 b, V2 pos, V2 vel, double c_rel, V2* res, double* in
     double cosb = c_rel*cosa;
     if (cosb > 1.0 || cosb < -1.0)
     {
-        printf("cos exceeded 1 - full inner reflection?\n");
+        //printf("cos exceeded 1 - full inner reflection?\n");
         //cosb = 1;
         *intensity_reflected = -1;
         return;
@@ -283,8 +283,10 @@ void deteriorate()
 void calc_a_step()
 {
     step++;
-    if (!(step%100))
-        printf("%d\n", n_nodes);
+    //if (!(step%5000))
+    //{
+    //    printf("%d %lf\n", n_nodes, T_FINISH);
+    //}
     refine();
     double dist, time = INFINITY;
     //if (!calculation_split_step)
@@ -336,7 +338,7 @@ void calc_a_step()
                                 nodes[n]->obstacle_number = -1;
                                 nodes[n]->vertice_number = i;
                                 encountered++;
-                                printf("ENC DOT: %d %lf %lf %lf\n", n, nodes[n]->pos.x, nodes[n]->pos.y, dist);
+                                //printf("ENC DOT: %d %lf %lf %lf\n", n, nodes[n]->pos.x, nodes[n]->pos.y, dist);
                             }
                         }
                     }
@@ -484,7 +486,7 @@ void calc_a_step()
                                     nodes[i]->neighbors_left[j]->right = reflected;
                                     nodes[i]->neighbors_left[j]->t_encounter = INFINITY;
                                 }
-                                else printf("Wavefront bifurcation prevented in %d node, materials %d %d\n", i, reflected->material, refracted->material);
+                                //else printf("Wavefront bifurcation prevented in %d node, materials %d %d\n", i, reflected->material, refracted->material);
                             }
                             if (refracted->material == nodes[i]->neighbors_left[j]->material
                                     && scalar(refracted->vel, nodes[i]->neighbors_left[j]->vel) > 0
@@ -497,7 +499,7 @@ void calc_a_step()
                                     nodes[i]->neighbors_left[j]->right = refracted;
                                     nodes[i]->neighbors_left[j]->t_encounter = INFINITY;
                                 }
-                                else printf("Wavefront bifurcation prevented in %d node, materials %d %d\n", i, reflected->material, refracted->material);
+                                //else printf("Wavefront bifurcation prevented in %d node, materials %d %d\n", i, reflected->material, refracted->material);
                             }
                         }
 
@@ -514,7 +516,7 @@ void calc_a_step()
                                     reflected->right = nodes[i]->neighbors_right[j];
                                     nodes[i]->neighbors_right[j]->left = reflected;
                                 }
-                                else printf("Wavefront bifurcation prevented in %d node, materials %d %d\n", i, reflected->material, refracted->material);
+                                //else printf("Wavefront bifurcation prevented in %d node, materials %d %d\n", i, reflected->material, refracted->material);
                             }
                             if (refracted->material == nodes[i]->neighbors_right[j]->material
                                     && scalar(refracted->vel, nodes[i]->neighbors_right[j]->vel) > 0
@@ -526,7 +528,7 @@ void calc_a_step()
                                     refracted->right = nodes[i]->neighbors_right[j];
                                     nodes[i]->neighbors_right[j]->left = refracted;
                                 }
-                                else printf("Wavefront bifurcation prevented in %d node, materials %d %d\n", i, reflected->material, refracted->material);
+                                //else printf("Wavefront bifurcation prevented in %d node, materials %d %d\n", i, reflected->material, refracted->material);
                             }
                         }
                     }
@@ -755,8 +757,8 @@ void init_from_file()
         int SIN_VERTICES = VERTICES - 5;
         double L = obstacles[i].pos[0].x - obstacles[i].pos[3].x;
         double DL = L/SIN_VERTICES;
-        double AMP = 20;
-	    double PIES = 5;
+        double AMP = 10;
+        double PIES = 5.5;
         double l;
         for (int j=4; j<VERTICES - 1; j++)
         {
@@ -770,11 +772,14 @@ void init_from_file()
 
     fscanf(f, "%d", &DOTS);
     for (int i=0; i<DOTS; i++)
-        if(fscanf(f, "%lf%lf%lf", &dots[i].pos.x, &dots[i].pos.y, &dots[i].brightness) != 3)
+        //if(fscanf(f, "%lf%lf%lf", &dots[i].pos.x, &dots[i].pos.y, &dots[i].brightness) != 3)
+        if(fscanf(f, "%lf%lf", &dots[i].pos.x, &dots[i].pos.y) != 2)
         {
             printf("Not enough dots data\n");
             exit(-1);
         }
+        else
+            dots[i].brightness = 0.05;
 
     fclose(f);
 
