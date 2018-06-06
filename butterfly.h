@@ -14,11 +14,11 @@ using namespace std;
 
 #define OBSTACLES_TOTAL         10
 #define DOTS_TOTAL              100
-#define VERTICES                105
+#define VERTICES                505
 #define ZERO                    0.00001
 #define MINLEN                  4.5
 #define PI                      3.14159265
-#define VISIBILITY_THRESHOLD    0.01
+#define VISIBILITY_THRESHOLD    0.02
 #define POINTS_IN_DOT_WAVEFRONT 50
 
 #define C0                      1
@@ -30,11 +30,9 @@ using namespace std;
 #define DT_WIDTH                54.0//0.0000021
 #define T_MULTIPLIER            1.0
 #define DT_DETERIORATION        5.0
-#define DETERIORATION           0.999
+#define DETERIORATION           0.998
 
 double CURRENT_DT_DETERIORATION = 0;
-
-#define DETERIORATION           0.999
 
 #define X			2000.0
 #define Y			2000.0
@@ -81,13 +79,20 @@ struct Node         // a ray
                                             // additional, "virtual", "ghost" neighbors - they are used to track reflected/refracted wavefronts
 
     int marked_for_the_kill;
-} * nodes[200000];
+} * nodes[200000] = {NULL};
 int n_nodes;
+
+struct Writing
+{
+    double time;
+    double brightness;
+    Node* node;
+};
 
 struct Sensor
 {
     V2 pos;
-    vector<double> writing_time;
+    vector<Writing> writing;
 } sensors[SENSORS];
 
 double total_time = 0;
@@ -179,8 +184,6 @@ double dist_to_segment(V2 a, V2 b, V2 va, V2 vb, V2 c)
     double t2 = (va.x * (a.y - b.y) + va.y * (b.x - a.x)) / (va.x * vb.y - va.y * vb.y);
     V2 o = {(a.x + b.x)/2, (a.y + b.y)/2};//{b.x + vb.x * t2, b.y + vb.y * t2};
     double dist = length(o, c);
-    //V2 v = {(o.x - c.x)/dist, (o.y - c.y)/dist};
-    //intersect(a, b, c, v, &dist);
     return dist;
 }
 
@@ -204,10 +207,11 @@ void write_to_csv()
     for(int i=0; i<SENSORS; i++)
     {
         double _signal = 0;
-        for(int j=0; j<sensors[i].writing_time.size(); j++)
+        for(int j=0; j<sensors[i].writing.size(); j++)
         {
-            if (sensors[i].writing_time[j] > 0) _signal += signal(sensors[i].writing_time[j]);
-            sensors[i].writing_time[j] += DT_DIGITIZATION;
+            if (sensors[i].writing[j].time > 0)
+                _signal += sensors[i].writing[j].brightness*signal(sensors[i].writing[j].time);
+            sensors[i].writing[j].time += DT_DIGITIZATION;
         }
         fprintf(f_csv, "%5.2lf ", _signal);
 
@@ -215,10 +219,10 @@ void write_to_csv()
         while (nulls_exist)
         {
             nulls_exist = false;
-            for (int j=0; j<sensors[i].writing_time.size(); j++)
-                if (sensors[i].writing_time[j] > DT_WIDTH)
+            for (int j=0; j<sensors[i].writing.size(); j++)
+                if (sensors[i].writing[j].time > DT_WIDTH)
                 {
-                    sensors[i].writing_time.erase(sensors[i].writing_time.begin() + j);
+                    sensors[i].writing.erase(sensors[i].writing.begin() + j);
                     nulls_exist = true;
                     break;
                 }
@@ -235,6 +239,38 @@ void write_to_csv()
 int calculation_split_step = 0;     // just for a more convenient visualization
 int step = 0;
 
+void connect(Node* left, Node* right)
+{
+    if (!left || !right)
+    {
+        printf("it's a null fucking pointer, meat bastard\n");
+        return;
+    }
+    left->right = right;
+    right->left = left;
+}
+
+int consistency_check()
+{
+    //TODO: fix this
+    for (int i=0; i<n_nodes; i++)
+    {
+        if (nodes[i]->left)
+            if (nodes[i] != nodes[i]->left->right)
+            {
+                nodes[i]->left = nodes[i]->left->right = NULL;
+                //return 0;
+            }
+        if (nodes[i]->right)
+            if (nodes[i] != nodes[i]->right->left)
+            {
+                nodes[i]->right = nodes[i]->right->left = NULL;
+                //return 0;
+            }
+    }
+    return 1;
+}
+
 void refine()
 {
     // refine the front based on real neighbors
@@ -243,8 +279,10 @@ void refine()
     while (coarse)
     {
         coarse = false;
+        n_nodes_old = n_nodes;
         for (int i=0; i<n_nodes_old; i++)
         {
+            if (!nodes[i]) printf("!!! mesh holes !!!\n");
             if (nodes[i]->right)
             {
                 Node *l = nodes[i], *r = nodes[i]->right;
@@ -255,10 +293,8 @@ void refine()
                     node->pos.y = (l->pos.y + r->pos.y) / 2;
                     node->vel.x = (l->vel.x + r->vel.x) / 2;
                     node->vel.y = (l->vel.y + r->vel.y) / 2;
-                    node->right = r;
-                    r->left = node;
-                    node->left = l;
-                    l->right = node;
+                    connect(node, r);
+                    connect(l, node);
                     l->t_encounter = INFINITY;
                     node->marked_for_the_kill = 0;
                     node->material = l->material;
@@ -278,15 +314,21 @@ void deteriorate()
 {
     for (int n=0; n<n_nodes; n++)
         nodes[n]->intensity *= DETERIORATION;
+    for(int i=0; i<SENSORS; i++)
+        for(int j=0; j<sensors[i].writing.size(); j++)
+            sensors[i].writing[j].brightness *= DETERIORATION;
 }
 
+int nonidiocy = 1;
 void calc_a_step()
 {
     step++;
-    //if (!(step%5000))
-    //{
-    //    printf("%d %lf\n", n_nodes, T_FINISH);
-    //}
+    if (nonidiocy && !consistency_check()) 
+    {
+        nonidiocy = 0;
+        printf("I'm with an idiot %d\n", step);
+    }
+    
     refine();
     double dist, time = INFINITY;
     //if (!calculation_split_step)
@@ -351,14 +393,7 @@ void calc_a_step()
                             double dist = dist_to_segment(nodes[n]->pos, nodes[n]->right->pos, nodes[n]->vel, nodes[n]->right->vel, sensors[i].pos);
                             time = fabs(dist / (nodes[n]->material >= 0 ? obstacles[nodes[n]->material].c_rel : 1.0));
                             if (time < nodes[n]->t_encounter)
-                            {
-                                sensors[i].writing_time.push_back(-time);
-                                //nodes[n]->t_encounter = time;
-                                //nodes[n]->obstacle_number = -2;
-                                //nodes[n]->vertice_number = i;
-                                //encountered++;
-                                //printf("ENC SNS: %d %lf %lf %lf\n", n, nodes[n]->pos.x, nodes[n]->pos.y, dist);
-                            }
+                                sensors[i].writing.push_back(Writing{-time, nodes[n]->intensity});
                         }
                     }
                 }
@@ -398,40 +433,40 @@ void calc_a_step()
             {
                 if (nodes[i]->obstacle_number >= 0) // encountering a continuous obstacle
                 {
-                    Node* reflected = new Node;
-                    nodes[n_nodes++] = reflected;       // acoustics => one node generates two others
-                    Node* refracted = new Node;
-                    nodes[n_nodes++] = refracted;
-
-                    reflected->pos = nodes[i]->pos;
-                    refracted->pos = nodes[i]->pos;
-
-                    // a kind of summoning sickness - new fronts appear at a little distance from the border
-                    reflected->pos.x -= 1.00015 * nodes[i]->vel.x;
-                    reflected->pos.y -= 1.00015 * nodes[i]->vel.y;
-                    refracted->pos.x += 1.00015 * nodes[i]->vel.x;
-                    refracted->pos.y += 1.00015 * nodes[i]->vel.y;
-
                     // velocity and intensity calculations
+                    V2 vel_0, vel_1;
+                    double i_0, i_1;
                     get_reflected(obstacles[nodes[i]->obstacle_number].pos[nodes[i]->vertice_number]
                                 , obstacles[nodes[i]->obstacle_number].pos[nodes[i]->vertice_number + 1]
-                                    , nodes[i]->pos, nodes[i]->vel, &(reflected->vel));
-                    reflected->intensity = refracted->intensity = nodes[i]->intensity;
+                                    , nodes[i]->pos, nodes[i]->vel, &vel_0);
+                    i_0 = i_1 = nodes[i]->intensity;
                     get_refracted(obstacles[nodes[i]->obstacle_number].pos[nodes[i]->vertice_number]
                                 , obstacles[nodes[i]->obstacle_number].pos[nodes[i]->vertice_number + 1]
                                 , nodes[i]->pos, nodes[i]->vel
                                 , nodes[i]->material == -1 ? obstacles[nodes[i]->obstacle_number].c_rel : 1.0 / obstacles[nodes[i]->obstacle_number].c_rel
-                                , &(refracted->vel)
-                                , &(reflected->intensity), &(refracted->intensity));
-                    if (reflected->intensity == -1)
+                                , &vel_1
+                                , &i_0, &i_1);
+                    if (i_0 == -1)
                     {
                         nodes[i]->marked_for_the_kill = 1;
-                        delete reflected;
-                        delete refracted;
-                        n_nodes -= 2;
                     }
                     else
                     {
+                        Node* reflected = new Node;
+                        Node* refracted = new Node;
+                        reflected->pos = nodes[i]->pos;
+                        refracted->pos = nodes[i]->pos;
+                        reflected->vel = vel_0;
+                        refracted->vel = vel_1;
+                        reflected->intensity = i_0;
+                        refracted->intensity = i_1;
+                        // a kind of summoning sickness - new fronts appear at a little distance from the border
+                        reflected->pos.x -= 1.00015 * nodes[i]->vel.x;
+                        reflected->pos.y -= 1.00015 * nodes[i]->vel.y;
+                        refracted->pos.x += 1.00015 * nodes[i]->vel.x;
+                        refracted->pos.y += 1.00015 * nodes[i]->vel.y;
+                        nodes[n_nodes++] = reflected;
+                        nodes[n_nodes++] = refracted;
                         reflected->material = nodes[i]->material;           // reflected material is the same as node's
                         refracted->material = (nodes[i]->material >= 0 ? -1 : nodes[i]->obstacle_number);
                                                                             //refracted material is either background or obstacle number
@@ -471,7 +506,6 @@ void calc_a_step()
                         //
                         // the algorithm is designed to restore a wavefront after reflection
 
-
                         for (int j=0; j<nodes[i]->neighbors_left.size(); j++)
                         {
 
@@ -482,8 +516,7 @@ void calc_a_step()
                             {
                                 if (!nodes[i]->neighbors_left[j]->right)   // if a wavefront is already restored, we don't bifurcate it
                                 {
-                                    reflected->left = nodes[i]->neighbors_left[j];
-                                    nodes[i]->neighbors_left[j]->right = reflected;
+                                    connect(nodes[i]->neighbors_left[j], reflected);
                                     nodes[i]->neighbors_left[j]->t_encounter = INFINITY;
                                 }
                                 //else printf("Wavefront bifurcation prevented in %d node, materials %d %d\n", i, reflected->material, refracted->material);
@@ -495,14 +528,12 @@ void calc_a_step()
                             {
                                 if (!nodes[i]->neighbors_left[j]->right)
                                 {
-                                    refracted->left = nodes[i]->neighbors_left[j];
-                                    nodes[i]->neighbors_left[j]->right = refracted;
+                                    connect(nodes[i]->neighbors_left[j], refracted);
                                     nodes[i]->neighbors_left[j]->t_encounter = INFINITY;
                                 }
                                 //else printf("Wavefront bifurcation prevented in %d node, materials %d %d\n", i, reflected->material, refracted->material);
                             }
                         }
-
                         for (int j=0; j<nodes[i]->neighbors_right.size(); j++)
                         {
 
@@ -512,10 +543,7 @@ void calc_a_step()
                                 )
                             {
                                 if (!nodes[i]->neighbors_right[j]->left)   // if a wavefront is already restored, we don't bifurcate it
-                                {
-                                    reflected->right = nodes[i]->neighbors_right[j];
-                                    nodes[i]->neighbors_right[j]->left = reflected;
-                                }
+                                    connect(reflected, nodes[i]->neighbors_right[j]);
                                 //else printf("Wavefront bifurcation prevented in %d node, materials %d %d\n", i, reflected->material, refracted->material);
                             }
                             if (refracted->material == nodes[i]->neighbors_right[j]->material
@@ -524,10 +552,7 @@ void calc_a_step()
                                 )
                             {
                                 if (!nodes[i]->neighbors_right[j]->left)
-                                {
-                                    refracted->right = nodes[i]->neighbors_right[j];
-                                    nodes[i]->neighbors_right[j]->left = refracted;
-                                }
+                                    connect(refracted, nodes[i]->neighbors_right[j]);
                                 //else printf("Wavefront bifurcation prevented in %d node, materials %d %d\n", i, reflected->material, refracted->material);
                             }
                         }
@@ -570,18 +595,10 @@ void calc_a_step()
                         nodes[old_n_nodes + j]->right = nodes[old_n_nodes + j + 1];
                     }
                     nodes[old_n_nodes]->right = nodes[old_n_nodes + 1];
-                    nodes[old_n_nodes + POINTS_IN_DOT_WAVEFRONT - 1]->left = nodes[old_n_nodes + POINTS_IN_DOT_WAVEFRONT - 2];
+                    nodes[n_nodes - 1]->left = nodes[n_nodes - 2];
                     nodes[i]->t_encounter = INFINITY;
                 }
-                else if (nodes[i]->obstacle_number == -2) //encountering a sensor
-                {
-                    //nodes[i]->t_encounter = INFINITY;
-                    //sensors[i].writing_time.push_back(0.0);
-                }
             }
-            //if (nodes[i]->t_encounter == -1 && nodes[i]->right)// && nodes[i]->left)
-            //    if (nodes[i]->right->t_encounter == -1)
-            //        nodes[i]->marked_for_the_kill = 1;
         }
     }
 
@@ -591,7 +608,7 @@ void calc_a_step()
         for (int i=0; i<n_nodes; i++)
             if (nodes[i]->intensity < VISIBILITY_THRESHOLD
                     || outside(nodes[i])
-                    || (!nodes[i]->left && !nodes[i]->right && !nodes[i]->neighbors_left.size() && !nodes[i]->neighbors_right.size())
+                    || (!nodes[i]->left && !nodes[i]->right && !(nodes[i]->neighbors_left.size()) && !(nodes[i]->neighbors_right.size()))
                 )// || nodes[i]->t_encounter < -0.5)
                 nodes[i]->marked_for_the_kill = 1;
 
@@ -613,6 +630,11 @@ void calc_a_step()
                                 nodes[i]->neighbors_right[j]->neighbors_left[k] = NULL;
                 nodes[i]->neighbors_left.clear();
                 nodes[i]->neighbors_right.clear();
+                for (int s=0; s<SENSORS; s++)
+                    for(int j=0; j<sensors[s].writing.size(); j++)
+                        if (sensors[s].writing[j].node == nodes[i]) 
+                            sensors[s].writing[j].node = NULL;
+                delete nodes[i];
                 nodes[i] = NULL;
             }
         }
@@ -620,7 +642,7 @@ void calc_a_step()
         bool cleared = false;
         while(!cleared)
         {
-            while (!nodes[n_nodes-1]) n_nodes--;
+            while (!nodes[n_nodes-1] && n_nodes) n_nodes--;
             cleared = true;
             for (int i=0; i<n_nodes; i++)
             {
@@ -640,12 +662,11 @@ void calc_a_step()
             while (nulls_exist)
             {
                 nulls_exist = false;
-                for (int j=0; j<nodes[i]->neighbors_left.size(); j++)
+                for (int j=0; j<nodes[i]->neighbors_left.size() && !nulls_exist; j++)
                     if (!nodes[i]->neighbors_left[j])
                     {
                         nodes[i]->neighbors_left.erase(nodes[i]->neighbors_left.begin() + j);
                         nulls_exist = true;
-                        break;
                     }
             }
 
@@ -653,17 +674,15 @@ void calc_a_step()
             while (nulls_exist)
             {
                 nulls_exist = false;
-                for (int j=0; j<nodes[i]->neighbors_right.size(); j++)
+                for (int j=0; j<nodes[i]->neighbors_right.size() && !nulls_exist; j++)
                     if (!nodes[i]->neighbors_right[j])
                     {
                         nodes[i]->neighbors_right.erase(nodes[i]->neighbors_right.begin() + j);
                         nulls_exist = true;
-                        break;
                     }
             }
         }
     }
-
     //if (calculation_split_step == 3)
 
     //printf("%d %d\n", calculation_split_step, n_nodes);
@@ -707,6 +726,7 @@ void init_explosion(double _x, double _y)
         temp->right = temp->left = NULL;
         nodes[n_nodes++] = temp;
         temp->intensity = 1.0;
+        temp->marked_for_the_kill = 0;
 
         double angle = 0;
         angle = 2*M_PI * i/(double)n;
@@ -730,9 +750,9 @@ void init_explosion(double _x, double _y)
     nodes[n-1]->right = nodes[0];
 }
 
-void init_from_file()
+void init_from_file(char* fname)
 {
-    FILE* f = fopen("obstacles.txt", "r");
+    FILE* f = fopen(fname, "r");
     if (!f)
     {
         printf("No obstacle data file\n");
@@ -757,8 +777,8 @@ void init_from_file()
         int SIN_VERTICES = VERTICES - 5;
         double L = obstacles[i].pos[0].x - obstacles[i].pos[3].x;
         double DL = L/SIN_VERTICES;
-        double AMP = 10;
-        double PIES = 5.5;
+        double AMP = 20;
+        double PIES = 9.5;
         double l;
         for (int j=4; j<VERTICES - 1; j++)
         {
@@ -772,14 +792,12 @@ void init_from_file()
 
     fscanf(f, "%d", &DOTS);
     for (int i=0; i<DOTS; i++)
-        //if(fscanf(f, "%lf%lf%lf", &dots[i].pos.x, &dots[i].pos.y, &dots[i].brightness) != 3)
-        if(fscanf(f, "%lf%lf", &dots[i].pos.x, &dots[i].pos.y) != 2)
+        if(fscanf(f, "%lf%lf%lf", &dots[i].pos.x, &dots[i].pos.y, &dots[i].brightness) != 3)
+        //if(fscanf(f, "%lf%lf", &dots[i].pos.x, &dots[i].pos.y) != 2)
         {
             printf("Not enough dots data\n");
             exit(-1);
         }
-        else
-            dots[i].brightness = 0.05;
 
     fclose(f);
 
@@ -801,6 +819,11 @@ void init_from_file()
 void finalize()
 {
     for (int i=0; i<n_nodes; i++)
-        delete(nodes[i]);
+    {
+        nodes[i]->neighbors_left.clear();
+        nodes[i]->neighbors_right.clear();
+        delete nodes[i];
+    }
+    n_nodes = 0;
 }
 

@@ -1,10 +1,10 @@
 double focus;
 int rays_num;
 
-double ***values;
-double **res;
+double ***values = NULL;
+double **res = NULL;
 
-void phasing()
+void phasing(char* fout, double antiattenuator)
 {
     int i, j, k, l, delayed;
     int max_length = written;
@@ -18,12 +18,14 @@ void phasing()
         for (j=0; j<SENSORS; j++)
             values[i][j] = (double*)malloc(sizeof(double)*max_length);
     }
+
     res = (double**)malloc(sizeof(double*)*rays_num);
     for (i=0; i<rays_num; i++)
         res[i] = (double*)malloc(sizeof(double)*res_length);
     for (i=0; i<rays_num; i++)
         for (j=0; j<res_length; j++)
             res[i][j] = 0;
+
     
     FILE *fi, *fo;
     char fname[100];
@@ -66,14 +68,28 @@ void phasing()
                     res[i][l] += values[j][k][delayed];
                 }
     }
-    fo = fopen("out.csv", "w");
+    sprintf(fname, "phased_%s.csv", fout);
+    fo = fopen(fname, "w");
     if (!fo) {printf("no file"); exit(-1);}
     for (i=0; i<rays_num; i++)
     {
         for (j=0; j<res_length; j++)
-            fprintf(fo, "%lf ", res[i][j]);
+            //fprintf(fo, "%lf ", res[i][j]*exp(j*15.0/(double)res_length));
+            fprintf(fo, "%lf ", res[i][j]*(1 + antiattenuator*j/(double)res_length));
         fprintf(fo, "\n");
     }
+
+    for (i=0; i<SENSORS; i++)
+    {
+        for (j=0; j<SENSORS; j++)
+            free(values[i][j]);
+        free(values[i]);
+    }
+    free(values);
+    for (i=0; i<rays_num; i++)
+        free(res[i]);
+    free(res);
+
     fclose(fo);
 }
 

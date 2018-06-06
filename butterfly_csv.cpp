@@ -3,13 +3,13 @@
 
 int main(int argc, char** argv)
 {
-    init_from_file();
+    init_from_file(argv[1]);
 
     for(int i=0; i<SENSORS; i++)
     {
         sensors[i].pos.y = Y*0.999;
-        sensors[i].pos.x = X/2 - DX_SENSORS * (SENSORS / 2 - i);
-        sensors[i].writing_time.clear();
+        sensors[i].pos.x = X/2 - DX_SENSORS * (SENSORS / 2 - i) -175.0;
+        sensors[i].writing.clear();
     }
 
     char fname[100];
@@ -22,7 +22,7 @@ int main(int argc, char** argv)
             printf("No file opened\n");
             exit(-1);
         }   
-        init_explosion(X/2 - DX_SENSORS * (SENSORS / 2 - i), Y*0.999);
+        init_explosion(X/2 - DX_SENSORS * (SENSORS / 2 - i)-175.0, Y*0.999);
 
         T_START = SENSORS*DX_SENSORS*1.2/C0;
         T_FINISH = 2.2*Y/C0;
@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     }
     fscanf(setup, "%d%lf", &rays_num, &focus);
     fclose(setup);
-    phasing();
+    phasing("out", 0.0);
 
     finalize();
 
