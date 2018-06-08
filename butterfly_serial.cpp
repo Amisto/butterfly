@@ -16,7 +16,7 @@ int main(int argc, char** argv)
     fclose(setup);
 
     char ftemplate[100];
-    double c_rel = 0.8, dc = 0.01;
+    double c_rel = 0.9, dc = 0.01;
     for (int c = 0; c < N_C; c++)
     {
         obstacles[0].c_rel = c_rel;

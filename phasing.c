@@ -32,10 +32,10 @@ void phasing(char* fout, double antiattenuator)
 
     for (i=0; i<SENSORS; i++)
     {    
-        sprintf(fname, "%03d.csv", i);
+        sprintf(fname, "%s_%03d.csv", fout, i);
         //printf("reading %s\n", fname);
         fi = fopen(fname, "r");
-        if (!fi) {printf("no file"); exit(-1);}
+        if (!fi) {printf("no file %s to read\n", fname); exit(-1);}
         for (j=0; j<max_length; j++)
         {
             for (k=0; k<SENSORS; k++)
@@ -70,7 +70,7 @@ void phasing(char* fout, double antiattenuator)
     }
     sprintf(fname, "phased_%s.csv", fout);
     fo = fopen(fname, "w");
-    if (!fo) {printf("no file"); exit(-1);}
+    if (!fo) {printf("no file %s to write\n", fname); exit(-1);}
     for (i=0; i<rays_num; i++)
     {
         for (j=0; j<res_length; j++)

@@ -30,7 +30,7 @@ using namespace std;
 #define DT_WIDTH                54.0//0.0000021
 #define T_MULTIPLIER            1.0
 #define DT_DETERIORATION        5.0
-#define DETERIORATION           0.998
+#define DETERIORATION           0.999
 
 double CURRENT_DT_DETERIORATION = 0;
 
