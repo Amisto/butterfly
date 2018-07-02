@@ -8,21 +8,21 @@ int main(int argc, char** argv)
     for(int i=0; i<SENSORS; i++)
     {
         sensors[i].pos.y = Y*0.999;
-        sensors[i].pos.x = X/2 - DX_SENSORS * (SENSORS / 2 - i) -175.0;
+        sensors[i].pos.x = X/2 - DX_SENSORS * (SENSORS / 2 - i);
         sensors[i].writing.clear();
     }
 
     char fname[100];
     for(int i=0; i<SENSORS; i++)
     {
-        sprintf(fname, "%03d.csv", i);
+        sprintf(fname, "%s_%03d.csv", argv[1], i);
         f_csv = fopen(fname, "w");
         if (!f_csv)
         {
             printf("No file opened\n");
             exit(-1);
         }   
-        init_explosion(X/2 - DX_SENSORS * (SENSORS / 2 - i)-175.0, Y*0.999);
+        init_explosion(X/2 - DX_SENSORS * (SENSORS / 2 - i), Y*0.999);
 
         T_START = SENSORS*DX_SENSORS*1.2/C0;
         T_FINISH = 2.2*Y/C0;
@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     }
     fscanf(setup, "%d%lf", &rays_num, &focus);
     fclose(setup);
-    phasing("out", 0.0);
+    phasing(argv[1], 0.0);
 
     finalize();
 

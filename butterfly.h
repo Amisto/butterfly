@@ -16,7 +16,7 @@ using namespace std;
 #define DOTS_TOTAL              100
 #define VERTICES                505
 #define ZERO                    0.00001
-#define MINLEN                  4.5
+#define MINLEN                  2.25
 #define PI                      3.14159265
 #define VISIBILITY_THRESHOLD    0.02
 #define POINTS_IN_DOT_WAVEFRONT 50
@@ -37,7 +37,7 @@ double CURRENT_DT_DETERIORATION = 0;
 #define X			2000.0
 #define Y			2000.0
 
-double T_START = SENSORS*DX_SENSORS*1.2/C0, T_FINISH = 2.2*Y/C0;
+double T_START = SENSORS*DX_SENSORS*1.2/C0, T_FINISH = 0.6*Y/C0;
 
 //==================================================================================================================
 //=== basic data structs
@@ -777,8 +777,8 @@ void init_from_file(char* fname)
         int SIN_VERTICES = VERTICES - 5;
         double L = obstacles[i].pos[0].x - obstacles[i].pos[3].x;
         double DL = L/SIN_VERTICES;
-        double AMP = 20;
-        double PIES = 9.5;
+        double AMP = 10;
+        double PIES = 10.0;
         double l;
         for (int j=4; j<VERTICES - 1; j++)
         {
@@ -792,12 +792,13 @@ void init_from_file(char* fname)
 
     fscanf(f, "%d", &DOTS);
     for (int i=0; i<DOTS; i++)
-        if(fscanf(f, "%lf%lf%lf", &dots[i].pos.x, &dots[i].pos.y, &dots[i].brightness) != 3)
-        //if(fscanf(f, "%lf%lf", &dots[i].pos.x, &dots[i].pos.y) != 2)
+        //if(fscanf(f, "%lf%lf%lf", &dots[i].pos.x, &dots[i].pos.y, &dots[i].brightness) != 3)
+        if(fscanf(f, "%lf%lf", &dots[i].pos.x, &dots[i].pos.y) != 2)
         {
             printf("Not enough dots data\n");
             exit(-1);
         }
+		else dots[i].brightness = 0.1;
 
     fclose(f);
 

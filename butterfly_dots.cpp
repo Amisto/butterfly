@@ -18,16 +18,16 @@ void draw_obstacles()
     for (int i=0; i<OBSTACLES; i++)
     {
         glColor3f(obstacles[i].c_rel, 0, 0);
-        glBegin(GL_POLYGON);
-        for (int j=0; j<VERTICES; j++)
-            glVertex2i(obstacles[i].pos[j].x, obstacles[i].pos[j].y);
-        glEnd();
-        /*glBegin(GL_LINES);
+        //glBegin(GL_POINTS);
+        //for (int j=0; j<VERTICES; j++)
+        //    glVertex2i(obstacles[i].pos[j].x, obstacles[i].pos[j].y);
+        //glEnd();
+        glBegin(GL_LINES);
         for (int j=0; j<VERTICES-1; j++)
         {
             glVertex2i(obstacles[i].pos[j].x, obstacles[i].pos[j].y);
             glVertex2i(obstacles[i].pos[j+1].x, obstacles[i].pos[j+1].y);
-        }*/
+        }
         glEnd();
     }
     glColor3f(0, 0, 1.0);
@@ -187,12 +187,21 @@ void key_exit(unsigned char c, int x, int y)
     }
 }
 
+double VIS_DT = (T_FINISH - T_START)/20;
+double VIS_CUR = T_FINISH;
+
 void key_pause(int key, int xx, int yy)
 {
     switch (key)
     {
         case GLUT_KEY_LEFT:  break;
-        case GLUT_KEY_RIGHT:  calc_a_step(); break;
+        case GLUT_KEY_RIGHT:  
+		    while (T_FINISH > VIS_CUR)
+			{
+		        calc_a_step(); 
+			}
+			VIS_CUR -= VIS_DT;
+			break;
         case GLUT_KEY_END:
             break;
     }
@@ -211,8 +220,8 @@ int main(int argc, char** argv)
     glutKeyboardFunc(key_exit);
     glutSpecialFunc(key_pause);
 
-    init_from_file();
-    init_explosion(X/2 - DX_SENSORS * (SENSORS / 2 - 0), Y*0.9);
+    init_from_file(argv[1]);
+    init_explosion(X/2 - DX_SENSORS * (SENSORS / 2 - 0), Y*0.999);
 
     f_csv = fopen("000.csv", "w");
     if (!f_csv)
@@ -225,7 +234,7 @@ int main(int argc, char** argv)
     {
         sensors[i].pos.y = Y*0.999;
         sensors[i].pos.x = X/2 - DX_SENSORS * (SENSORS / 2 - i);
-        sensors[i].writing_time.clear();
+        sensors[i].writing.clear();
     }
 
     glutMainLoop();                   /* pass control to the main loop  */
