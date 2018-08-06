@@ -49,13 +49,15 @@ void phasing(char* fout, double antiattenuator)
     for (i=0; i<rays_num; i++)
     {
         //printf("%d of %d\n", i, rays_num);
-        double alpha = M_PI/6.0 + ((M_PI*2.0/3.0)/rays_num)*i;
+        //double alpha = M_PI/4.0 + ((M_PI*1.0/2.0)/rays_num)*i;
+        double alpha = M_PI/4.0 + ((M_PI*1.0/2.0)/rays_num)*i;
         double s = sin(alpha);
         double c = cos(alpha);
         for (j=0; j<SENSORS; j++)
         {
             l = SENSORS/2 - j;
             delay[j] = focus - sqrt(focus*focus*s*s + (focus*c - l)*(focus*c - l));//focus - sqrt(focus*c*focus*c + (focus*s - l)*(focus*s - l));
+            //delay[j] = focus - sqrt(focus*focus*c*c + (focus*s + l)*(focus*s + l));
         }
 
         for (j=0; j<SENSORS; j++)

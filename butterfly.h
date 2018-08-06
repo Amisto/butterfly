@@ -15,20 +15,20 @@ using namespace std;
 #define OBSTACLES_TOTAL         10
 #define DOTS_TOTAL              100
 #define VERTICES                505
-#define ZERO                    0.00001
-#define MINLEN                  2.25
+#define ZERO                    0.000001
+#define MINLEN                  2.0//2.25
 #define PI                      3.14159265
-#define VISIBILITY_THRESHOLD    0.02
-#define POINTS_IN_DOT_WAVEFRONT 50
+#define VISIBILITY_THRESHOLD    0.08
+#define POINTS_IN_DOT_WAVEFRONT 500
 
 #define C0                      1
 
-#define SENSORS                 32
-#define DX_SENSORS              5.625
-#define DT_DIGITIZATION         2.8//0.0000001
-#define DT_CARRYING             18.0//0.0000003
-#define DT_WIDTH                54.0//0.0000021
-#define T_MULTIPLIER            1.0
+#define SENSORS                 64
+#define DX_SENSORS              2.8125
+#define DT_DIGITIZATION         1.0//0.0000001
+#define DT_CARRYING             8.0//0.0000003
+#define DT_WIDTH                32.0//0.0000021
+#define T_MULTIPLIER            0.1
 #define DT_DETERIORATION        5.0
 #define DETERIORATION           0.999
 
@@ -37,7 +37,9 @@ double CURRENT_DT_DETERIORATION = 0;
 #define X			2000.0
 #define Y			2000.0
 
-double T_START = SENSORS*DX_SENSORS*1.2/C0, T_FINISH = 0.6*Y/C0;
+double T_START = SENSORS*DX_SENSORS*1.2/C0, T_FINISH = 1.8*Y/C0;
+
+double PIES = 6.0;
 
 //==================================================================================================================
 //=== basic data structs
@@ -79,13 +81,14 @@ struct Node         // a ray
                                             // additional, "virtual", "ghost" neighbors - they are used to track reflected/refracted wavefronts
 
     int marked_for_the_kill;
-} * nodes[200000] = {NULL};
+} * nodes[300000] = {NULL};
 int n_nodes;
 
 struct Writing
 {
     double time;
     double brightness;
+    double frequency_correction; //if a ray falls at a target at an angle
     Node* node;
 };
 
@@ -197,9 +200,9 @@ bool outside(Node* node)
 
 FILE* f_csv = NULL;
 
-double signal(double t)
+double signal(double t, double fc)
 {
-    return sin(M_PI * t / DT_WIDTH) * sin(M_PI * t / DT_WIDTH) * sin(2 * M_PI * t / DT_CARRYING);
+    return sin(M_PI * t / DT_WIDTH) * sin(M_PI * t / DT_WIDTH) * sin(2 * M_PI * t / DT_CARRYING * fc);
 }
 
 void write_to_csv()
@@ -210,7 +213,7 @@ void write_to_csv()
         for(int j=0; j<sensors[i].writing.size(); j++)
         {
             if (sensors[i].writing[j].time > 0)
-                _signal += sensors[i].writing[j].brightness*signal(sensors[i].writing[j].time);
+                _signal += sensors[i].writing[j].brightness*signal(sensors[i].writing[j].time, sensors[i].writing[j].frequency_correction);
             sensors[i].writing[j].time += DT_DIGITIZATION;
         }
         fprintf(f_csv, "%5.2lf ", _signal);
@@ -393,7 +396,7 @@ void calc_a_step()
                             double dist = dist_to_segment(nodes[n]->pos, nodes[n]->right->pos, nodes[n]->vel, nodes[n]->right->vel, sensors[i].pos);
                             time = fabs(dist / (nodes[n]->material >= 0 ? obstacles[nodes[n]->material].c_rel : 1.0));
                             if (time < nodes[n]->t_encounter)
-                                sensors[i].writing.push_back(Writing{-time, nodes[n]->intensity});
+                                sensors[i].writing.push_back(Writing{-time, nodes[n]->intensity, 1.0/nodes[n]->vel.y});
                         }
                     }
                 }
@@ -777,8 +780,7 @@ void init_from_file(char* fname)
         int SIN_VERTICES = VERTICES - 5;
         double L = obstacles[i].pos[0].x - obstacles[i].pos[3].x;
         double DL = L/SIN_VERTICES;
-        double AMP = 10;
-        double PIES = 10.0;
+        double AMP = 2.5;
         double l;
         for (int j=4; j<VERTICES - 1; j++)
         {
@@ -792,13 +794,13 @@ void init_from_file(char* fname)
 
     fscanf(f, "%d", &DOTS);
     for (int i=0; i<DOTS; i++)
-        //if(fscanf(f, "%lf%lf%lf", &dots[i].pos.x, &dots[i].pos.y, &dots[i].brightness) != 3)
-        if(fscanf(f, "%lf%lf", &dots[i].pos.x, &dots[i].pos.y) != 2)
+        if(fscanf(f, "%lf%lf%lf", &dots[i].pos.x, &dots[i].pos.y, &dots[i].brightness) != 3)
+        //if(fscanf(f, "%lf%lf", &dots[i].pos.x, &dots[i].pos.y) != 2)
         {
             printf("Not enough dots data\n");
             exit(-1);
         }
-		else dots[i].brightness = 0.1;
+	else dots[i].brightness = 0.25;
 
     fclose(f);
 

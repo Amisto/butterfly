@@ -12,10 +12,19 @@ int main(int argc, char** argv)
         sensors[i].writing.clear();
     }
 
+    FILE* setup = fopen(argv[2], "r");
+    if (!setup)
+    {
+        printf("No file opened\n");
+        exit(-1);
+    }
+    fscanf(setup, "%d%lf%lf", &rays_num, &focus, &PIES);
+    fclose(setup);
+
     char fname[100];
     for(int i=0; i<SENSORS; i++)
     {
-        sprintf(fname, "%s_%03d.csv", argv[1], i);
+        sprintf(fname, "%s_%s_%03d.csv", argv[1], argv[2], i);
         f_csv = fopen(fname, "w");
         if (!f_csv)
         {
@@ -33,15 +42,8 @@ int main(int argc, char** argv)
         printf("%3dth sensor of %d calculated\n", i, SENSORS);
     }
 
-    FILE* setup = fopen("setup.txt", "r");
-    if (!setup)
-    {
-        printf("No file opened\n");
-        exit(-1);
-    }
-    fscanf(setup, "%d%lf", &rays_num, &focus);
-    fclose(setup);
-    phasing(argv[1], 0.0);
+    sprintf(fname, "%s_%s", argv[1], argv[2]);
+    phasing(fname, 0.0);
 
     finalize();
 
