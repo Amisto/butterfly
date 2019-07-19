@@ -14,30 +14,31 @@ using namespace std;
 
 #define OBSTACLES_TOTAL         10
 #define DOTS_TOTAL              100
-#define VERTICES                505
+#define VERTICES                5
 #define ZERO                    0.000001
-#define MINLEN                  2.0//2.25
+#define MINLEN                  0.1//2.25
 #define PI                      3.14159265
 #define VISIBILITY_THRESHOLD    0.08
-#define POINTS_IN_DOT_WAVEFRONT 500
+#define POINTS_IN_DOT_WAVEFRONT 4000
 
-#define C0                      1
+#define C0                      1.0
 
-#define SENSORS                 64
-#define DX_SENSORS              2.8125
-#define DT_DIGITIZATION         1.0//0.0000001
-#define DT_CARRYING             8.0//0.0000003
-#define DT_WIDTH                32.0//0.0000021
-#define T_MULTIPLIER            0.1
-#define DT_DETERIORATION        5.0
-#define DETERIORATION           0.999
+#define SENSORS                 32
+#define DX_SENSORS              4.6875//5.625
+#define DT_DIGITIZATION         16.0e-1//0.0000001
+#define DT_CARRYING             52.0e-1//7.5//0.0000003
+#define DT_WIDTH                208.0e-1//37.5//0.0000021
+#define T_MULTIPLIER            0.005
+#define DT_DETERIORATION        1.0
+#define DETERIORATION           0.9999
 
 double CURRENT_DT_DETERIORATION = 0;
 
-#define X			2000.0
-#define Y			2000.0
+#define X			500.0
+#define Y			500.0
 
-double T_START = SENSORS*DX_SENSORS*1.2/C0, T_FINISH = 1.8*Y/C0;
+double T_START_BASE = SENSORS*DX_SENSORS*0.1/C0, T_FINISH_BASE = 2.0*Y/C0;
+double T_START = T_START_BASE, T_FINISH = T_FINISH_BASE;
 
 double PIES = 6.0;
 
@@ -765,7 +766,7 @@ void init_from_file(char* fname)
     fscanf(f, "%d", &OBSTACLES);
     for (int i=0; i<OBSTACLES; i++)
     {
-        for (int j=0; j<4; j++)
+        for (int j=0; j<VERTICES - 1; j++)
             if (fscanf(f, "%lf%lf", &obstacles[i].pos[j].x, &obstacles[i].pos[j].y) != 2)
             {
                 printf("Not enough obstacle data\n");
@@ -777,7 +778,7 @@ void init_from_file(char* fname)
             exit(-1);
         }
 
-        int SIN_VERTICES = VERTICES - 5;
+        /*int SIN_VERTICES = VERTICES - 5;
         double L = obstacles[i].pos[0].x - obstacles[i].pos[3].x;
         double DL = L/SIN_VERTICES;
         double AMP = 2.5;
@@ -788,8 +789,9 @@ void init_from_file(char* fname)
             obstacles[i].pos[j].x = obstacles[i].pos[3].x + l; 
             obstacles[i].pos[j].y = obstacles[i].pos[3].y + AMP*sin(l/L*M_PI*PIES);
         }
+        */
         obstacles[i].pos[VERTICES-1].x = obstacles[i].pos[0].x;
-        obstacles[i].pos[VERTICES-1].y = obstacles[i].pos[0].y;
+        obstacles[i].pos[VERTICES-1].y = obstacles[i].pos[0].y; 
     }
 
     fscanf(f, "%d", &DOTS);
@@ -800,7 +802,7 @@ void init_from_file(char* fname)
             printf("Not enough dots data\n");
             exit(-1);
         }
-	else dots[i].brightness = 0.25;
+	else dots[i].brightness = 0.1;
 
     fclose(f);
 
