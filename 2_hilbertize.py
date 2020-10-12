@@ -89,7 +89,7 @@ for one_file in args.files:
                         stri += " "
                     print(stri, file=fu)
 
-            # TODO! FIX THE ROOTS OF SAVING FILES
+            # TODO! FIX THE ROOTS OF SAVING FILES AND OPENINGS
             final(file=one_file, val=vals_init, pref="_prehilb.png")
             # writing final graphics
             final(file=one_file, val=res, pref="_hilb.png")
