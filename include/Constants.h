@@ -1,3 +1,4 @@
 #define VERTICES 5
 #define OBSTACLES_TOTAL 10
 #define DOTS_TOTAL 100
+#define SENSORS 32
