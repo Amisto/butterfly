@@ -1,4 +1,6 @@
 #include "butterfly.h"
+#include <string>
+#include <string.h>
 #define N_C 11
 #define N_S 1
 
@@ -18,7 +20,8 @@ int main(int argc, char** argv)
 
     char ftemplate[100];
     double c_rel = obstacles[0].c_rel;
-    
+
+
     for(int i=0; i<SENSORS; i++)
     {
         sensors[i].pos.y = Y*0.999;
@@ -37,8 +40,13 @@ int main(int argc, char** argv)
             char fname[100];
             for(int i=0; i<SENSORS; i++)
             {
+                char data_after_propagate_path[100] = "./data/baseline/data_after_propagate/";
                 sprintf(fname, "%s_%03d.csv", ftemplate, i);
-                f_csv = fopen(fname, "w");
+
+                strcat(data_after_propagate_path, fname);
+                f_csv = fopen(data_after_propagate_path, "w");
+
+                //f_csv = fopen(fname, "w");
                 if (!f_csv)
                 {
                     printf("No file opened\n");
@@ -56,6 +64,8 @@ int main(int argc, char** argv)
                 fclose(f_csv);
                 printf("%3dth sensor of %d calculated\n", i, SENSORS);
                 finalize();
+                //p[100] = '\0';
+                //delete[] p;
             }
             printf("c %lf shift %d of %d\n", c_rel, s, N_S);
 
@@ -75,4 +85,3 @@ int main(int argc, char** argv)
 
     return 0;
 }
-
