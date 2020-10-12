@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+from hilbertize_functions import final  # function to create final files
 import argparse
 import os
 import re
@@ -81,22 +81,16 @@ with open(args.files) as ff:
         res_fft.append(np.abs(hilbert(np.fft.irfft(fft))))
     plt.savefig(args.output + "_spectrum_" + ".png")
     #results -> 255 grayscale
+    final(file=args.output, val=res_fft, pref=".png")
+    #Put two else parts into the function
+    final(file=args.output + "_" + str(args.freq_min) +
+        "_" + str(args.freq_max), val=vals, pref="_fft.png")
+
+    
     min_res_fft = min(map(min, res_fft))
     max_res_fft = max(map(max, res_fft))
-    res_fft_color = [[int(255*(x-min_res_fft)/(max_res_fft-min_res_fft)) for x in l] for l in res_fft]
-    max_res = max(map(max, vals))
-    min_res = min(map(min, vals))
-    res_color = [[int(255*(x-min_res)/(max_res-min_res)) for x in l] for l in vals]
-
-    #printin'
-    with open(args.output+".png", 'wb') as f:
-        w = png.Writer(len(res_color[0]), len(res_color), greyscale=True)
-        w.write(f, res_color)
-    with open(args.output + "_" + str(args.freq_min) + "_" + str(args.freq_max) +"_fft.png", 'wb') as f:
-        w = png.Writer(len(res_fft_color[0]), len(res_fft_color), greyscale=True)
-        w.write(f, res_fft_color)
-
-
+    res_fft_color = [[int(255*(x-min_res_fft)/(max_res_fft-min_res_fft))
+    for x in l] for l in res_fft]
     data = res_fft_color
     h = len(data)*1.0
     w = len(data[0])*1.0
@@ -163,6 +157,7 @@ with open(args.files) as ff:
             else:
                 new_data[i][j] = 0
     print(maxv)
+
     max_data = max(map(max, new_data))
     min_data = min(map(min, new_data))
     data_color = [[int(255*(x-min_data)/(max_data-min_data)) for x in l] for l in new_data]
