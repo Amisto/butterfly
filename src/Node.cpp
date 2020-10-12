@@ -4,7 +4,7 @@ const Vector2 Node::GetPos() const {
   return pos;
 }
 
-const Vector2 &Node::GetVelocity() const {
+const Vector2 Node::GetVelocity() const {
   return velocity;
 }
 
@@ -36,11 +36,11 @@ Node *Node::GetRight() const {
   return right;
 }
 
-const std::vector<Node *> &Node::GetNeighborsLeft() const {
+const std::vector<Node *> Node::GetNeighborsLeft() const {
   return neighbors_left;
 }
 
-const std::vector<Node *> &Node::GetNeighborsRight() const {
+const std::vector<Node *> Node::GetNeighborsRight() const {
   return neighbors_right;
 }
 

@@ -39,7 +39,7 @@ class Node {
   void SetMarkedForTheKill(int marked_for_the_kill);
 
   const Vector2 GetPos() const;
-  const Vector2 &GetVelocity() const;
+  const Vector2 GetVelocity() const;
   int GetMaterial() const;
   double GetIntensity() const;
   double GetTEncounter() const;
@@ -47,8 +47,8 @@ class Node {
   int GetVerticeNumber() const;
   Node *GetLeft() const;
   Node *GetRight() const;
-  const std::vector<Node *> &GetNeighborsLeft() const;
-  const std::vector<Node *> &GetNeighborsRight() const;
+  const std::vector<Node *> GetNeighborsLeft() const;
+  const std::vector<Node *> GetNeighborsRight() const;
   int GetMarkedForTheKill() const;
 
 };
