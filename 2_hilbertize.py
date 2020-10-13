@@ -84,6 +84,7 @@ for one_file in raw_data:
                     stri += " "
                 print(stri, file=fo)
                 #Hello, my name is Karmanich
+                #Hello, Karmanich!
 
             with open(dir.format(cnt) + one_file+"2_HIHIHILB.csv", 'w') as fu:
                 for r in vals_init:
