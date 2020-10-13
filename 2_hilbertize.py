@@ -83,6 +83,7 @@ for one_file in raw_data:
                     stri += str(round((t - min_data)/(max_data-min_data), 2))
                     stri += " "
                 print(stri, file=fo)
+                #Hello, my name is Karmanich
 
             with open(dir.format(cnt) + one_file+"2_HIHIHILB.csv", 'w') as fu:
                 for r in vals_init:
