@@ -43,8 +43,9 @@ parser.add_argument(
     type=int,
     metavar='FREQ_MAX',
     help='Max range of the frequency window'
-
 )
+
+args = parser.parse_args()
 
 def interpolate(v1, v2, factor):
     return v1*(1-factor) + v2*factor
@@ -60,7 +61,7 @@ def interpolate3(v0, v1, v2, v3, factor):
     c = -0.5*v0 + 0.5*v1 - a
     return a*factor*factor*factor + b*factor*factor + c*factor + d
 
-args = parser.parse_args()
+
 cnt = 0
 for one_file in args.files:
     with open(one_file) as ff:
@@ -101,13 +102,10 @@ for one_file in args.files:
         data = res_fft_color
         h = len(data)*1.0
         w = len(data[0])*1.0
-
-        angle_rad = 90*math.pi/180
-
+        angle_rad = math.pi/2
         r = h/angle_rad/2.0
         R = r + w
         q = r*math.cos(angle_rad/2.0)
-
         nh = math.ceil(R - q)
         nw = math.ceil(2*R*math.sin(angle_rad/2))
 
@@ -122,12 +120,9 @@ for one_file in args.files:
                 y = i + 0.5
                 dx = x - cx
                 dy = cy + y
-
                 d = (dx**2 + dy**2)**0.5 - r
-
                 d1 = math.floor(d)
                 d2 = math.ceil(d)
-
                 a = (0.5 + math.atan2(dx, dy)/angle_rad)*h
 
                 #rayw = 4
@@ -182,4 +177,7 @@ for one_file in args.files:
         with open(dir.format(cnt)+one_file+"_"+args.output+"_sectorized_serial.png", 'wb') as fff:
             w = png.Writer(nw+1, nh+1, greyscale=True)
             w.write(fff, data_color)
+
+        final(file=dir.format(cnt) + args.output,
+            val=new_data, pref="_sectorized.png")
 
