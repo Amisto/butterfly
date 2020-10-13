@@ -7,4 +7,4 @@ def final(file, val, pref):
         w.write(fpng, data_color)
 
 
-dir = '/data/baseline/Sensor{}'
+dir = 'data/baseline/Sensor{}'

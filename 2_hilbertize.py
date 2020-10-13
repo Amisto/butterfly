@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-from hilbertize_functions import final, dir#function to create final files
-import matplotlib.pyplot as plt #directory for saving
+from hilbertize_functions import final, dir  # function to create final files
+import matplotlib.pyplot as plt  # directory for saving
 import argparse
 import os
 import re
@@ -15,13 +15,6 @@ matplotlib.use('Agg')
 # Creating parser for powershell
 parser = argparse.ArgumentParser(description='Hilbertizing sensor data')
 
-parser.add_argument(  # creates a list of csv files
-    'files',
-    metavar='FILES',
-    nargs='+',
-    help='List of CSV files with solo sensor data'
-)
-
 parser.add_argument(
     '--window',
     required=True,
@@ -29,12 +22,29 @@ parser.add_argument(
     metavar='WINDOW',
     help='Width of the frequency window'
 )
-args = parser.parse_args()  # 2 arguments at all
 
+args = parser.parse_args()
 cnt = 0
-for one_file in args.files:
-    #for saving files by dirs
-    with open(dir.format(cnt)+one_file) as fi:
+cnt_dirs = 0
+file_names = []
+for i in range(0, 32):
+    file_name = os.listdir('data/baseline/Sensor{}/'.format(i))
+    file_names.append(file_name)
+raw_data=[]
+tpl = r'^baseline.txt_shift_0.00_0\d+.csv$'
+for dr in file_names:
+    for i in dr:
+        if re.match(tpl, i):
+            raw_data.append(i)
+        else:
+            continue
+print(raw_data)
+
+
+
+for one_file in raw_data:
+    # for saving files by dirs
+    with open(dir.format(cnt) + '/'+ one_file) as fi:
         with open(dir.format(cnt)+one_file+"2_hilb.csv", 'w') as fo:
             vals_init = [[float(x) for x in l.split()] for l in fi.readlines()]
             vals = list(zip(*vals_init))
@@ -61,8 +71,8 @@ for one_file in args.files:
                 res_fft.append(np.abs(hilbert(np.fft.irfft(fft))))
 
             print(mid)
-            #saving spectrum
-            plt.savefig(dir.format(cnt)+  one_file + "2_spectrum_" + ".png")
+            # saving spectrum
+            plt.savefig(dir.format(cnt) + one_file + "2_spectrum_" + ".png")
             plt.cla()
             res = list(zip(*res_fft))
             max_data = max(map(max, res))
@@ -74,7 +84,7 @@ for one_file in args.files:
                     stri += " "
                 print(stri, file=fo)
 
-            with open(dir.format(cnt)+ one_file+"2_HIHIHILB.csv", 'w') as fu:
+            with open(dir.format(cnt) + one_file+"2_HIHIHILB.csv", 'w') as fu:
                 for r in vals_init:
                     stri = ""
                     for t in r:
@@ -82,9 +92,9 @@ for one_file in args.files:
                         stri += " "
                     print(stri, file=fu)
 
-            final(file=dir.format(cnt) + 
-                one_file, val=vals_init, pref="2_prehilb.png")
+            final(file=dir.format(cnt) +
+                  one_file, val=vals_init, pref="2_prehilb.png")
             # writing final graphics
             final(file=dir.format(cnt) +
-                one_file, val=res, pref="2_hilb.png")
-    cnt+=1 #plussing to copy next files in another folder
+                  one_file, val=res, pref="2_hilb.png")
+    cnt += 1  # plussing to copy next files in another folder
