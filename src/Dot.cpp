@@ -11,10 +11,10 @@ double Dot::getBrightness() const {
 	return brightness;
 }
 
-void Dot::setPos() {
+void Dot::setPos(const Vector2 &pos) {
 	this->pos = pos;
 }
 
-void Dot::setBrightness() {
+void Dot::setBrightness(double brightness) {
 	this->brightness = brightness;
 }

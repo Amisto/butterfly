@@ -23,5 +23,15 @@ void Solver::init() {
 		obstacles[i].setPos(VERTICES, obstacles[i].getPos(0));
 	}
 
+	file >> DOTS;
+	for (int i = 0; i < DOTS; i++) {
+		int x, y;
+		double brightness;
+		file >> x >> y >> brightness;
+
+		dots[i].setPos(Vector2(x, y));
+		dots[i].setBrightness(brightness);
+	}
+
 	file.close();
 }

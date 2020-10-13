@@ -12,7 +12,9 @@ class Solver {
 	Dot dots[DOTS_TOTAL];
 	Sensor sensors[SENSORS];
 	Node *nodes[300000];
+
 	int OBSTACLES = 0;
+	int DOTS = 0;
 
  public:
 	Solver();

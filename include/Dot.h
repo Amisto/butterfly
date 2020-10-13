@@ -10,11 +10,12 @@ class Dot {
 
  public:
 	Dot(Vector2 pos = Vector2(), double brightness = 0);
+
 	Vector2 getPos() const;
 	double getBrightness() const;
 
-	void setPos();
-	void setBrightness();
+	void setPos(const Vector2 &pos);
+	void setBrightness(double brightness);
 };
 
 #endif //SOLVER_INCLUDE_DOT_H_
