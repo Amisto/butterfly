@@ -7,14 +7,14 @@
 
 class Sensor {
  private:
-  Vector2 pos;
-  std::vector<Writing> writing;
+	Vector2 pos;
+	std::vector<Writing> writing;
 
  public:
-  const Vector2 GetPos() const;
-  const std::vector<Writing> GetWriting() const;
-  void SetPos(const Vector2 &pos);
-  void SetWriting(const std::vector<Writing> &writing);
+	const Vector2 getPos() const;
+	const std::vector<Writing> getWriting() const;
+	void setPos(const Vector2 &pos);
+	void setWriting(const std::vector<Writing> &writing);
 
 };
 

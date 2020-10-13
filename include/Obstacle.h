@@ -6,13 +6,17 @@
 
 class Obstacle {
  private:
-  Vector2 pos[VERTICES];
-  double c_rel;
+	Vector2 pos[VERTICES];
+	double c_rel;
 
  public:
-  Vector2 getPos(int i) const;
-  double getCRel() const;
+	Obstacle();
 
+	Vector2 getPos(int i) const;
+	double getCRel() const;
+
+	void setPos(int j, Vector2 pos);
+	void setCRel(double c_rel);
 };
 
 #endif //SOLVER_OBSTACLE_H

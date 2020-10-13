@@ -8,11 +8,15 @@
 
 class Solver {
  private:
-  Obstacle obstacles[OBSTACLES_TOTAL];
-  Dot dots[DOTS_TOTAL];
-  Sensor sensors[SENSORS];
-  Node *nodes[300000];
+	Obstacle obstacles[OBSTACLES_TOTAL];
+	Dot dots[DOTS_TOTAL];
+	Sensor sensors[SENSORS];
+	Node *nodes[300000];
+	int OBSTACLES = 0;
 
+ public:
+	Solver();
+	void init();
 };
 
 #endif //SOLVER_SRC_SYSTEM_H_

@@ -1,17 +1,17 @@
 #include "Sensor.h"
 
-const Vector2 Sensor::GetPos() const {
+const Vector2 Sensor::getPos() const {
   return pos;
 }
 
-const std::vector<Writing> Sensor::GetWriting() const {
+const std::vector<Writing> Sensor::getWriting() const {
   return writing;
 }
 
-void Sensor::SetPos(const Vector2 &pos) {
+void Sensor::setPos(const Vector2 &pos) {
   this->pos = pos;
 }
 
-void Sensor::SetWriting(const std::vector<Writing> &writing) {
+void Sensor::setWriting(const std::vector<Writing> &writing) {
   this->writing = writing;
 }

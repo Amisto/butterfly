@@ -5,17 +5,16 @@
 
 class Dot {
  private:
-  Vector2 pos;
-  double brightness;
+	Vector2 pos;
+	double brightness;
 
  public:
+	Dot(Vector2 pos = Vector2(), double brightness = 0);
+	Vector2 getPos() const;
+	double getBrightness() const;
 
-  Dot(Vector2 pos, double brightness = 0);
-  Vector2 getPos() const;
-  double getBrightness() const;
-
-  void setPos();
-  void setBrightness();
+	void setPos();
+	void setBrightness();
 };
 
 #endif //SOLVER_INCLUDE_DOT_H_
