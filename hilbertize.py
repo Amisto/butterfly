@@ -158,10 +158,7 @@ with open(args.files) as ff:
                 new_data[i][j] = 0
     print(maxv)
 
-    max_data = max(map(max, new_data))
-    min_data = min(map(min, new_data))
-    data_color = [[int(255*(x-min_data)/(max_data-min_data)) for x in l] for l in new_data]
-    with open(dir.format(cnt) + args.output+"_sectorized.png", 'wb') as fff:
-        w = png.Writer(nw+1, nh+1, greyscale=True)
-        w.write(fff, data_color)
+    final(file=dir.format(cnt) + args.output,
+        val=new_data, pref="_sectorized.png")
+
 

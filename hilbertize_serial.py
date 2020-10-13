@@ -169,6 +169,7 @@ for one_file in args.files:
                     new_data[i][j] = z
                 else:
                     new_data[i][j] = -1
+        
         max_data = max(map(max, new_data))
 
         for i in range(nh):

@@ -43,15 +43,15 @@ for one_file in args.files:
             maxf = 0
             for i, row in enumerate(vals):
                 fft = np.fft.rfft(row)
-
                 # this is to check the spectrum and find the carrying freauency
                 # near-zero freqencies somehow are exremely large
                 plt.plot(np.abs(fft)[10:])
                 maxf += np.abs(fft)[10:].argmax()
-
                 #plt.savefig(args.output + "_fft_" + str(i) + ".png")
                 # plt.clf()
+
             mid = maxf/len(vals)
+
             for i, row in enumerate(vals):
                 fft = np.fft.rfft(row)
                 for j, freq in enumerate(fft):
@@ -59,7 +59,9 @@ for one_file in args.files:
                     if not (mid - args.window/2.0 <= j <= mid + args.window/2.0):
                         fft[j] = 0
                 res_fft.append(np.abs(hilbert(np.fft.irfft(fft))))
+
             print(mid)
+            #saving spectrum
             plt.savefig(dir.format(cnt)+  one_file + "2_spectrum_" + ".png")
             plt.cla()
             res = list(zip(*res_fft))
