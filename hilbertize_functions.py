@@ -5,3 +5,6 @@ def final(file, val, pref):
     with open(file+pref, 'wb') as fpng:
         w = png.Writer(len(val[0]), len(val), greyscale=True)
         w.write(fpng, data_color)
+
+
+dir = '/data/baseline/Sensor{}'

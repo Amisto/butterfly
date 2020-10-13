@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from hilbertize_functions import final  # function to create final files
+from hilbertize_functions import final, dir  # function to create final files
 import argparse
 import os
 import re
@@ -60,7 +60,7 @@ def interpolate3(v0, v1, v2, v3, factor):
     return a*factor*factor*factor + b*factor*factor + c*factor + d
 
 args = parser.parse_args()
-
+cnt = 0
 with open(args.files) as ff:
     vals = [[abs(float(x)) for x in l.split()] for l in ff.readlines()]
 
@@ -79,11 +79,11 @@ with open(args.files) as ff:
             if not (args.freq_min <= j <= args.freq_max):
                 fft[j] = 0
         res_fft.append(np.abs(hilbert(np.fft.irfft(fft))))
-    plt.savefig(args.output + "_spectrum_" + ".png")
+    plt.savefig(dir.format(cnt)+args.output + "_spectrum_" + ".png")
     #results -> 255 grayscale
-    final(file=args.output, val=res_fft, pref=".png")
+    final(file=dir.format(cnt) + args.output, val=res_fft, pref=".png")
     #Put two else parts into the function
-    final(file=args.output + "_" + str(args.freq_min) +
+    final(file=dir.format(cnt) + args.output + "_" + str(args.freq_min) +
         "_" + str(args.freq_max), val=vals, pref="_fft.png")
 
     
@@ -161,7 +161,7 @@ with open(args.files) as ff:
     max_data = max(map(max, new_data))
     min_data = min(map(min, new_data))
     data_color = [[int(255*(x-min_data)/(max_data-min_data)) for x in l] for l in new_data]
-    with open(args.output+"_sectorized.png", 'wb') as fff:
+    with open(dir.format(cnt) + args.output+"_sectorized.png", 'wb') as fff:
         w = png.Writer(nw+1, nh+1, greyscale=True)
         w.write(fff, data_color)
 
