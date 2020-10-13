@@ -15,6 +15,7 @@ class Sensor {
 	const std::vector<Writing> getWriting() const;
 	void setPos(const Vector2 &pos);
 	void setWriting(const std::vector<Writing> &writing);
+	void clearWriting();
 
 };
 

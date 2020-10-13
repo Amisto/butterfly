@@ -15,10 +15,16 @@ class Solver {
 
 	int OBSTACLES = 0;
 	int DOTS = 0;
+	int rays_num = 0;
+	double focus = 0;
+	double PIES = 0;
 
  public:
 	Solver();
+	void initObstacles();
+	void initDots();
 	void init();
+	void propagate();
 };
 
 #endif //SOLVER_SRC_SYSTEM_H_

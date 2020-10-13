@@ -15,3 +15,7 @@ void Sensor::setPos(const Vector2 &pos) {
 void Sensor::setWriting(const std::vector<Writing> &writing) {
   this->writing = writing;
 }
+
+void Sensor::clearWriting() {
+	this->writing.clear();
+}

@@ -7,7 +7,16 @@ Solver::Solver() {
 }
 
 void Solver::init() {
-	std::ifstream file("baseline.txt");
+	initObstacles();
+	initDots();
+
+	std::ifstream setupFile("res/setup_base.txt");
+	setupFile >> rays_num >> focus >> PIES;
+	setupFile.close();
+}
+
+void Solver::initObstacles() {
+	std::ifstream file("res/obstacles.txt");
 	file >> OBSTACLES;
 
 	for (int i = 0; i < OBSTACLES; i++) {
@@ -22,8 +31,12 @@ void Solver::init() {
 
 		obstacles[i].setPos(VERTICES, obstacles[i].getPos(0));
 	}
+}
 
+void Solver::initDots() {
+	std::ifstream file("res/dots.txt");
 	file >> DOTS;
+
 	for (int i = 0; i < DOTS; i++) {
 		int x, y;
 		double brightness;
@@ -34,4 +47,13 @@ void Solver::init() {
 	}
 
 	file.close();
+}
+
+void Solver::propagate() {
+	for (int i = 0; i < SENSORS; i++) {
+		double x = X / 2 - DX_SENSORS * (SENSORS / 2 - i);
+		double y = Y * 0.999;
+		sensors[i].setPos(Vector2(x, y));
+		sensors[i].clearWriting();	//probably redundant, writing already empty
+	}
 }
