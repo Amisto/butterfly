@@ -15,4 +15,11 @@ class Vector2 {
 	double getY() const;
 };
 
+double scalar (const Vector2 &A, const Vector2 &B);
+double length(const Vector2 &A, const Vector2 &B);
+double area (const Vector2 &A, const Vector2 &B, const Vector2 &C);
+bool doIntersect (const Vector2 &A, const Vector2 &B, const Vector2 &C, const Vector2 &D, Vector2* Result);
+bool doIntersect (const Vector2 &A, const Vector2 &B, const Vector2 &C, const Vector2 &V, double *distanceToIntersection);
+bool isPointInRect (const Vector2 &X, const Vector2 &A, const Vector2 &B, const Vector2 &C, const Vector2 &D);
+
 #endif //SOLVER_VECTOR2_H

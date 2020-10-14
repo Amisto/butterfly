@@ -105,12 +105,12 @@ unsigned long int written = 0;
 //==================================================================================================================
 //=== basic math
 
-double scalar (V2 a, V2 b)
+double scalar (V2 a, V2 b) //done.
 {
     return a.x*b.x + a.y*b.y;
 }
 
-double length(V2 a, V2 b)
+double length(V2 a, V2 b) //done.
 {
     V2 tmp = {a.x - b.x, a.y - b.y};
     return sqrt(scalar(tmp, tmp));
@@ -120,11 +120,11 @@ double det (double a, double b, double c, double d) {
     return a * d - b * c;
 }
 
-double area (V2 a, V2 b, V2 c) {
+double area (V2 a, V2 b, V2 c) { //done.
     return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 }
 
-bool intersect (V2 a, V2 b, V2 c, V2 d, V2* res) {
+bool intersect (V2 a, V2 b, V2 c, V2 d, V2* res) { //done.
     if (!(area(a, d, b)*area(a, b, c) > 0 && area(d, b, c)*area(d, c, a) > 0))
         return false;
     double t = ( (c.y-a.y)*(b.x-a.x) - (c.x-a.x)*(b.y-a.y) )/( (c.x-d.x)*(b.y-a.y) - (c.y-d.y)*(b.x-a.x) );
@@ -133,7 +133,7 @@ bool intersect (V2 a, V2 b, V2 c, V2 d, V2* res) {
     return true;
 }
 
-bool intersect (V2 a, V2 b, V2 c, V2 v, double *dist) { // segment ab, ray cd
+bool intersect (V2 a, V2 b, V2 c, V2 v, double *dist) { // segment ab, ray cd done.
     V2 d = {c.x + v.x * 1000, c.y + v.y * 1000};
     if (!(area(a, d, b)*area(a, b, c) > 0 && area(d, b, c)*area(d, c, a) > 0))
         return false;
@@ -141,7 +141,7 @@ bool intersect (V2 a, V2 b, V2 c, V2 v, double *dist) { // segment ab, ray cd
     return true;
 }
 
-bool point_in_rect (V2 x, V2 a, V2 b, V2 c, V2 d)
+bool point_in_rect (V2 x, V2 a, V2 b, V2 c, V2 d) //done.
 {
     bool a1 = area(x, a, b) > - ZERO,
         a2 = area(x, b, c) > - ZERO,
