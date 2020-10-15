@@ -1,5 +1,4 @@
 #!/bin/bash
-rm *.png *.csv
 g++ 1_propagate.cpp -o 1_propagate -lm -O3
 time ./1_propagate baseline.txt setup_base.txt
 # loading 2_hilbertize.py and loading final files to the :
