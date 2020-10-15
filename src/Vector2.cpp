@@ -1,6 +1,6 @@
 #include "Vector2.h"
 #include <cmath>
-#define ZERO                    0.000001
+#include "Constants.h"
 
 Vector2::Vector2(double x, double y) : x{x}, y{y} {
 }
@@ -21,20 +21,20 @@ double Vector2::getY() const {
 	return y;
 }
 
-double scalar(const Vector2 &A, const Vector2 &B){
+double scalar(const Vector2 &A, const Vector2 &B) {
     return A.getX()*B.getX() + A.getY()*B.getY();
 }
 
-double length(const Vector2 &A, const Vector2 &B){
+double length(const Vector2 &A, const Vector2 &B) {
     Vector2 Tmp = {A.getX() - B.getX(), A.getY() - B.getY()};
     return sqrt(scalar(Tmp, Tmp));
 }
 
-double area (const Vector2 &A, const Vector2 &B, const Vector2 &C){
+double area (const Vector2 &A, const Vector2 &B, const Vector2 &C) {
     return (B.getX() - A.getX()) * (C.getY() - A.getY()) - (B.getY() - A.getY()) * (C.getX() - A.getX());
 }
 
-bool doIntersect (const Vector2 &A, const Vector2 &B, const Vector2 &C, const Vector2 &D, Vector2* Result){
+bool doIntersect (const Vector2 &A, const Vector2 &B, const Vector2 &C, const Vector2 &D, Vector2* Result) {
     if (!(area(A, D, B)*area(A, B, C) > 0 && area(D, B, C)*area(D, C, A) > 0))
         return false;
     double Temp = ( (C.getY()-A.getY())*(B.getX()-A.getX()) -
@@ -58,10 +58,18 @@ bool doIntersect (const Vector2 &A, const Vector2 &B, const Vector2 &C, const Ve
     return true;
 }
 
-bool isPointInRect (const Vector2 &X, const Vector2 &A, const Vector2 &B, const Vector2 &C, const Vector2 &D){
-    bool Area1 = area(X, A, B) > - ZERO,
-            Area2 = area(X, B, C) > - ZERO,
-            Area3 = area(X, C, D) > - ZERO,
-            Area4 = area(X, D, A) > - ZERO;
+bool isPointInRect (const Vector2 &P, const Vector2 &A, const Vector2 &B, const Vector2 &C, const Vector2 &D) {
+    bool Area1 = area(P, A, B) > - ZERO,
+            Area2 = area(P, B, C) > - ZERO,
+            Area3 = area(P, C, D) > - ZERO,
+            Area4 = area(P, D, A) > - ZERO;
     return (Area1 == Area2 && Area2 == Area3 && Area3 == Area4);
+}
+
+void getReflected (const Vector2 &A, const Vector2 &B, const Vector2 &Position, const Vector2 &Velocity, Vector2 *Result) {
+    double  sinA = -Velocity.getY(), cosA = Velocity.getX(),
+            sinB = (B.getY() - A.getY())/length(A, B),
+            cosB = (B.getX() - A.getX())/length(A, B);
+    Result->setX(cosA*(cosB*cosB - sinB*sinB) - 2.0*sinA*sinB*cosB);
+    Result->setY(sinA*(cosB*cosB - sinB*sinB) + 2.0*cosA*sinB*cosB);
 }

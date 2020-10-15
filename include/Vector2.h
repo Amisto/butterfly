@@ -18,8 +18,10 @@ class Vector2 {
 double scalar (const Vector2 &A, const Vector2 &B);
 double length(const Vector2 &A, const Vector2 &B);
 double area (const Vector2 &A, const Vector2 &B, const Vector2 &C);
-bool doIntersect (const Vector2 &A, const Vector2 &B, const Vector2 &C, const Vector2 &D, Vector2* Result);
+bool doIntersect (const Vector2 &A, const Vector2 &B, const Vector2 &C, const Vector2 &D, Vector2 *Result);
 bool doIntersect (const Vector2 &A, const Vector2 &B, const Vector2 &C, const Vector2 &V, double *distanceToIntersection);
-bool isPointInRect (const Vector2 &X, const Vector2 &A, const Vector2 &B, const Vector2 &C, const Vector2 &D);
+bool isPointInRect (const Vector2 &P, const Vector2 &A, const Vector2 &B, const Vector2 &C, const Vector2 &D);
+void getReflected (const Vector2 &A, const Vector2 &B, const Vector2 &Position, const Vector2 &Velocity, Vector2 *Result);
+double distanceToSegment(const Vector2 &A, const Vector2 &B,const Vector2 &vA, const Vector2 &vB, const Vector2 &C);
 
 #endif //SOLVER_VECTOR2_H

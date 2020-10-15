@@ -53,4 +53,6 @@ class Node {
 
 };
 
+bool isOutside(const Node& Node);
+
 #endif //SOLVER_NODE_H

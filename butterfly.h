@@ -116,7 +116,7 @@ double length(V2 a, V2 b) //done.
     return sqrt(scalar(tmp, tmp));
 }
 
-double det (double a, double b, double c, double d) {
+double det (double a, double b, double c, double d) { //gonna die.
     return a * d - b * c;
 }
 
@@ -150,7 +150,7 @@ bool point_in_rect (V2 x, V2 a, V2 b, V2 c, V2 d) //done.
     return (a1 == a2 && a2 == a3 && a3 == a4);
 }
 
-void get_reflected (V2 a, V2 b, V2 pos, V2 vel, V2* res)
+void get_reflected (V2 a, V2 b, V2 pos, V2 vel, V2* res) //done.
 {
     double sina = -vel.y, cosa = vel.x, sinb = (b.y - a.y)/length(a, b), cosb = (b.x - a.x)/length(a, b);
     res->x = cosa*(cosb*cosb - sinb*sinb) - 2.0*sina*sinb*cosb;
@@ -183,7 +183,7 @@ void get_refracted(V2 a, V2 b, V2 pos, V2 vel, double c_rel, V2* res, double* in
     //printf("%lf %lf \n", *intensity_reflected, *intensity_refracted);
 }
 
-double dist_to_segment(V2 a, V2 b, V2 va, V2 vb, V2 c)
+double dist_to_segment(V2 a, V2 b, V2 va, V2 vb, V2 c) //in process
 {
     double t2 = (va.x * (a.y - b.y) + va.y * (b.x - a.x)) / (va.x * vb.y - va.y * vb.y);
     V2 o = {(a.x + b.x)/2, (a.y + b.y)/2};//{b.x + vb.x * t2, b.y + vb.y * t2};
@@ -191,7 +191,7 @@ double dist_to_segment(V2 a, V2 b, V2 va, V2 vb, V2 c)
     return dist;
 }
 
-bool outside(Node* node)
+bool outside(Node* node) //done.
 {
     return node->pos.x > X || node->pos.x < 0 || node->pos.y > Y || node->pos.y < 0;
 }
