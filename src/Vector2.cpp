@@ -74,9 +74,8 @@ void getReflected (const Vector2 &A, const Vector2 &B, const Vector2 &Velocity, 
     Result->setY(sinA*(cosB*cosB - sinB*sinB) + 2.0*cosA*sinB*cosB);
 }
 
-double distanceToSegment(const Vector2 &A, const Vector2 &B,const Vector2 &vA, const Vector2 &vB, const Vector2 &C) {
-    double t2 = (vA.getX() * (A.getY() - B.getY()) + vA.getY() * (B.getX() - A.getX())) / (vA.getX() * vB.getY() - vA.getY() * vB.getY());
-    Vector2 O = {(A.getX() + B.getX())/2, (A.getY() + B.getY())/2};//{b.x + vb.x * t2, b.y + vb.y * t2};
+double distanceToSegment(const Vector2 &A, const Vector2 &B, const Vector2 &C) {
+    Vector2 O = {(A.getX() + B.getX())/2, (A.getY() + B.getY())/2};
     double dist = length(O, C);
     return dist;
 }
