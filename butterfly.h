@@ -157,7 +157,7 @@ void get_reflected (V2 a, V2 b, V2 pos, V2 vel, V2* res) //done.
     res->y = sina*(cosb*cosb - sinb*sinb) + 2.0*cosa*sinb*cosb;
 }
 
-void get_refracted(V2 a, V2 b, V2 pos, V2 vel, double c_rel, V2* res, double* intensity_reflected, double* intensity_refracted)
+void get_refracted(V2 a, V2 b, V2 pos, V2 vel, double c_rel, V2* res, double* intensity_reflected, double* intensity_refracted) //done.
 {
     double sing = (b.y - a.y)/length(a, b), cosg = (b.x - a.x)/length(a, b);
     double sinf = vel.y, cosf = vel.x;

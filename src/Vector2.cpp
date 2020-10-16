@@ -66,10 +66,39 @@ bool isPointInRect (const Vector2 &P, const Vector2 &A, const Vector2 &B, const 
     return (Area1 == Area2 && Area2 == Area3 && Area3 == Area4);
 }
 
-void getReflected (const Vector2 &A, const Vector2 &B, const Vector2 &Position, const Vector2 &Velocity, Vector2 *Result) {
+void getReflected (const Vector2 &A, const Vector2 &B, const Vector2 &Velocity, Vector2 *Result) {
     double  sinA = -Velocity.getY(), cosA = Velocity.getX(),
             sinB = (B.getY() - A.getY())/length(A, B),
             cosB = (B.getX() - A.getX())/length(A, B);
     Result->setX(cosA*(cosB*cosB - sinB*sinB) - 2.0*sinA*sinB*cosB);
     Result->setY(sinA*(cosB*cosB - sinB*sinB) + 2.0*cosA*sinB*cosB);
+}
+
+double distanceToSegment(const Vector2 &A, const Vector2 &B,const Vector2 &vA, const Vector2 &vB, const Vector2 &C) {
+    double t2 = (vA.getX() * (A.getY() - B.getY()) + vA.getY() * (B.getX() - A.getX())) / (vA.getX() * vB.getY() - vA.getY() * vB.getY());
+    Vector2 O = {(A.getX() + B.getX())/2, (A.getY() + B.getY())/2};//{b.x + vb.x * t2, b.y + vb.y * t2};
+    double dist = length(O, C);
+    return dist;
+}
+
+void getRefracted(const Vector2 &A, const Vector2 &B, const Vector2 &Velocity, const double cRel,
+                        Vector2 *Result, double* intensityReflected, double* intensityRefracted) {
+    double sinG= (B.getY() - A.getY())/length(A, B), cosG = (B.getX() - A.getX())/length(A, B);
+    double sinF = Velocity.getY(), cosF = Velocity.getX();
+    double cosA = cosG*cosF + sinG*sinF;
+    double sinA = sinG*cosF - sinF*cosG;
+    double cosB = cRel*cosA;
+    if (cosB > 1.0 || cosB < -1.0)
+    {
+        *intensityReflected = -1;
+        return;
+    }
+    double sinB = sqrt(1 - cosB*cosB);
+    if (sinA < 0) sinB *= -1;
+    Result->setX(cosG*cosB + sinG*sinB);
+    Result->setY(sinG*cosB - cosG*sinB);
+
+    double z1 = 1 * cosA, z2 = cRel * cosB;
+    *intensityRefracted *= fabs(2*z2/(z2 + z1));        //0.5;//(sinA - cRel * sinB) / (sinA + cRel * sinB);
+    *intensityReflected *= fabs((z2 - z1)/(z2 + z1));   //0.5;//sinA / (sinA + cRel * sinB);
 }
