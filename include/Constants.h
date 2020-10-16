@@ -5,3 +5,4 @@
 #define DX_SENSORS 4.6875
 #define X 500.0
 #define Y 500.0
+#define ZERO 0.000001
