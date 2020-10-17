@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 from hilbertize_functions import final, dir  # function to create final files
 import matplotlib.pyplot as plt  # directory for saving
 import argparse
@@ -22,7 +21,6 @@ parser.add_argument(
     metavar='WINDOW',
     help='Width of the frequency window'
 )
-
 args = parser.parse_args()
 cnt = 0
 cnt_dirs = 0
@@ -31,21 +29,19 @@ for i in range(0, 32):
     file_name = os.listdir('data/baseline/Sensor{}/'.format(i))
     file_names.append(file_name)
 raw_data=[]
-tpl = r'^baseline.txt_shift_0.00_0\d+.csv$'
+tpl = r'^raw\d+.csv$'
 for dr in file_names:
     for i in dr:
         if re.match(tpl, i):
             raw_data.append(i)
         else:
             continue
-print(raw_data)
-
 
 
 for one_file in raw_data:
     # for saving files by dirs
     with open(dir.format(cnt) + '/'+ one_file) as fi:
-        with open(dir.format(cnt)+one_file+"2_hilb.csv", 'w') as fo:
+        with open(dir.format(cnt)+"/hilb.csv", 'w') as fo:
             vals_init = [[float(x) for x in l.split()] for l in fi.readlines()]
             vals = list(zip(*vals_init))
             # Narrowband filtering + Hilbert transformation
@@ -72,7 +68,7 @@ for one_file in raw_data:
 
             print(mid)
             # saving spectrum
-            plt.savefig(dir.format(cnt) + one_file + "2_spectrum_" + ".png")
+            plt.savefig(dir.format(cnt) +'/spectrum' + ".png" )
             plt.cla()
             res = list(zip(*res_fft))
             max_data = max(map(max, res))
@@ -86,7 +82,7 @@ for one_file in raw_data:
                 #Hello, my name is Karmanich
                 #Hello, Karmanich!
 
-            with open(dir.format(cnt) + one_file+"2_HIHIHILB.csv", 'w') as fu:
+            with open(dir.format(cnt) + "/2hilb.csv", 'w') as fu:
                 for r in vals_init:
                     stri = ""
                     for t in r:
@@ -94,9 +90,7 @@ for one_file in raw_data:
                         stri += " "
                     print(stri, file=fu)
 
-            final(file=dir.format(cnt) +
-                  one_file, val=vals_init, pref="2_prehilb.png")
+            final(file=dir.format(cnt), val=vals_init, pref="/prehilb.png")
             # writing final graphics
-            final(file=dir.format(cnt) +
-                  one_file, val=res, pref="2_hilb.png")
+            final(file=dir.format(cnt), val=res, pref="/2hilb.png")
     cnt += 1  # plussing to copy next files in another folder

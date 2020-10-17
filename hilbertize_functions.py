@@ -1,3 +1,4 @@
+import png
 def final(file, val, pref):
     max_data = max(map(max, val))
     min_data = min(map(min, val))
