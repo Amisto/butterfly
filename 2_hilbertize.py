@@ -1,4 +1,15 @@
-from hilbertize_functions import final, dir  # function to create final files
+import png
+def final(file, val, pref):
+    max_data = max(map(max, val))
+    min_data = min(map(min, val))
+    data_color = [[int(255*(x-min_data)/(max_data-min_data)) for x in l] for l in val]
+    with open(file+pref, 'wb') as fpng:
+        w = png.Writer(len(val[0]), len(val), greyscale=True)
+        w.write(fpng, data_color)
+
+
+dir = 'data/baseline/Sensor{}'  # function to create final files
+
 import matplotlib.pyplot as plt  # directory for saving
 import argparse
 import os
@@ -79,8 +90,6 @@ for one_file in raw_data:
                     stri += str(round((t - min_data)/(max_data-min_data), 2))
                     stri += " "
                 print(stri, file=fo)
-                #Hello, my name is Karmanich
-                #Hello, Karmanich!
 
             with open(dir.format(cnt) + "/2hilb.csv", 'w') as fu:
                 for r in vals_init:
