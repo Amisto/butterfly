@@ -183,7 +183,7 @@ void get_refracted(V2 a, V2 b, V2 pos, V2 vel, double c_rel, V2* res, double* in
     //printf("%lf %lf \n", *intensity_reflected, *intensity_refracted);
 }
 
-double dist_to_segment(V2 a, V2 b, V2 va, V2 vb, V2 c) //in process
+double dist_to_segment(V2 a, V2 b, V2 va, V2 vb, V2 c) //seems to be done.
 {
     double t2 = (va.x * (a.y - b.y) + va.y * (b.x - a.x)) / (va.x * vb.y - va.y * vb.y);
     V2 o = {(a.x + b.x)/2, (a.y + b.y)/2};//{b.x + vb.x * t2, b.y + vb.y * t2};

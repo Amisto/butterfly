@@ -22,7 +22,7 @@ bool doIntersect (const Vector2 &A, const Vector2 &B, const Vector2 &C, const Ve
 bool doIntersect (const Vector2 &A, const Vector2 &B, const Vector2 &C, const Vector2 &V, double *distanceToIntersection);
 bool isPointInRect (const Vector2 &P, const Vector2 &A, const Vector2 &B, const Vector2 &C, const Vector2 &D);
 void getReflected (const Vector2 &A, const Vector2 &B, const Vector2 &Velocity, Vector2 *Result);
-double distanceToSegment(const Vector2 &A, const Vector2 &B,const Vector2 &vA, const Vector2 &vB, const Vector2 &C);
+double distanceToSegment(const Vector2 &A, const Vector2 &B, const Vector2 &C);
 void getRefracted(const Vector2 &A, const Vector2 &B, const Vector2 &Velocity, const double cRel,
                         Vector2 *Result, double* intensityReflected, double* intensityRefracted);
 
