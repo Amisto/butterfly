@@ -1,3 +1,6 @@
+#include <string>
+#include <string.h>
+
 double focus;
 int rays_num;
 
@@ -29,13 +32,16 @@ void phasing(char* fout, double antiattenuator)
     
     FILE *fi, *fo;
     char fname[100];
+    char path[100];
 
     for (i=0; i<SENSORS; i++)
-    {    
+    {
+        sprintf(path, "./data/baseline/Sensor%d/", i);
         sprintf(fname, "%s_%03d.csv", fout, i);
+        strcat(path, fname);
         //printf("reading %s\n", fname);
-        fi = fopen(fname, "r");
-        if (!fi) {printf("no file %s to read\n", fname); exit(-1);}
+        fi = fopen(path, "r");
+        if (!fi) {printf("%d no file %s to read\n",i, fname); exit(-1);}
         for (j=0; j<max_length; j++)
         {
             for (k=0; k<SENSORS; k++)

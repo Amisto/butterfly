@@ -40,7 +40,8 @@ int main(int argc, char** argv)
             char fname[100];
             for(int i=0; i<SENSORS; i++)
             {
-                char data_after_propagate_path[100] = "./data/baseline/data_after_propagate/";
+                char data_after_propagate_path[100];// = "./data/baseline/Sensor%d/";
+                sprintf(data_after_propagate_path, "./data/baseline/Sensor%d/", i);
                 sprintf(fname, "%s_%03d.csv", ftemplate, i);
 
                 strcat(data_after_propagate_path, fname);
