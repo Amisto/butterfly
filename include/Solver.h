@@ -25,6 +25,7 @@ class Solver {
 	void initDots();
 	void init();
 	void propagate();
+	void initExplosion(Vector2 pos);
 };
 
 #endif //SOLVER_SRC_SYSTEM_H_

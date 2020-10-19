@@ -1,6 +1,7 @@
 #include "Solver.h"
 #include <fstream>
 #include <iostream>
+#include <cmath>
 
 Solver::Solver() {
 	init();
@@ -53,7 +54,42 @@ void Solver::propagate() {
 	for (int i = 0; i < SENSORS; i++) {
 		double x = X / 2 - DX_SENSORS * (SENSORS / 2 - i);
 		double y = Y * 0.999;
+
 		sensors[i].setPos(Vector2(x, y));
 		sensors[i].clearWriting();	//probably redundant, writing already empty
+		initExplosion(Vector2(x, y));
 	}
+}
+
+void Solver::initExplosion(Vector2 pos) {
+	int n_nodes = 0;
+	int n = POINTS_IN_DOT_WAVEFRONT * 2;
+	for (int i=0; i<n; i++)
+	{
+		Node *temp = new Node;
+		temp->setMaterial(-1);
+		temp->setNeighborsLeft(std::vector<Node*>());
+		temp->setNeighborsRight(std::vector<Node*>());
+		temp->setTEncounter(INFINITY);
+		temp->setLeft(NULL);
+		temp->setRight(NULL);
+		nodes[n_nodes++] = temp;
+		temp->setIntensity(1.0);
+		temp->setMarkedForTheKill(0);
+
+		double angle = 0;
+		angle = 2*M_PI * i/(double)n;
+		temp->setVelocity(Vector2(cos(angle), sin(angle)));
+		temp->setPos(pos);
+	}
+	for (int i=1; i<n-1; i++)
+	{
+		nodes[i]->setLeft(nodes[i-1]);
+		nodes[i]->setRight(nodes[i+1]);
+	}
+	nodes[0]->setRight(nodes[1]);
+	nodes[0]->setLeft(nodes[n-1]);
+	nodes[n-1]->setLeft(nodes[n-2]);
+	nodes[n-1]->setRight(nodes[0]);
+
 }
