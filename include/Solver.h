@@ -16,8 +16,11 @@ class Solver {
 	int OBSTACLES = 0;
 	int DOTS = 0;
 	int rays_num = 0;
+	int nodesNum = 0;
 	double focus = 0;
 	double PIES = 0;
+
+	int checkObstacles(int node);
 
  public:
 	Solver();
@@ -26,6 +29,7 @@ class Solver {
 	void init();
 	void propagate();
 	void initExplosion(Vector2 pos);
+	void step();
 };
 
 #endif //SOLVER_SRC_SYSTEM_H_

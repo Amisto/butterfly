@@ -56,40 +56,70 @@ void Solver::propagate() {
 		double y = Y * 0.999;
 
 		sensors[i].setPos(Vector2(x, y));
-		sensors[i].clearWriting();	//probably redundant, writing already empty
+		sensors[i].clearWriting();    //probably redundant, writing already empty
 		initExplosion(Vector2(x, y));
 	}
 }
 
 void Solver::initExplosion(Vector2 pos) {
-	int n_nodes = 0;
+	nodesNum = 0;
 	int n = POINTS_IN_DOT_WAVEFRONT * 2;
-	for (int i=0; i<n; i++)
-	{
+	for (int i = 0; i < n; i++) {
 		Node *temp = new Node;
 		temp->setMaterial(-1);
-		temp->setNeighborsLeft(std::vector<Node*>());
-		temp->setNeighborsRight(std::vector<Node*>());
+		temp->setNeighborsLeft(std::vector<Node *>());
+		temp->setNeighborsRight(std::vector<Node *>());
 		temp->setTEncounter(INFINITY);
 		temp->setLeft(NULL);
 		temp->setRight(NULL);
-		nodes[n_nodes++] = temp;
+		nodes[nodesNum++] = temp;
 		temp->setIntensity(1.0);
 		temp->setMarkedForTheKill(0);
 
 		double angle = 0;
-		angle = 2*M_PI * i/(double)n;
+		angle = 2 * M_PI * i / (double) n;
 		temp->setVelocity(Vector2(cos(angle), sin(angle)));
 		temp->setPos(pos);
 	}
-	for (int i=1; i<n-1; i++)
-	{
-		nodes[i]->setLeft(nodes[i-1]);
-		nodes[i]->setRight(nodes[i+1]);
+	for (int i = 1; i < n - 1; i++) {
+		nodes[i]->setLeft(nodes[i - 1]);
+		nodes[i]->setRight(nodes[i + 1]);
 	}
 	nodes[0]->setRight(nodes[1]);
-	nodes[0]->setLeft(nodes[n-1]);
-	nodes[n-1]->setLeft(nodes[n-2]);
-	nodes[n-1]->setRight(nodes[0]);
+	nodes[0]->setLeft(nodes[n - 1]);
+	nodes[n - 1]->setLeft(nodes[n - 2]);
+	nodes[n - 1]->setRight(nodes[0]);
 
+}
+
+void Solver::step() {
+	for (int node = 0; node < nodesNum; node++) {
+		checkObstacles(node);
+	}
+}
+
+int Solver::checkObstacles(int node) {
+	int encounters = 0;
+	double dist, time = INFINITY;
+
+	for (int i = 0; i < OBSTACLES; i++) {
+		for (int j = 0; j < VERTICES - 1; j++) {
+			if (doIntersect(obstacles[i].getPos(j),obstacles[i].getPos(j+1),nodes[node]->getPos(),nodes[node]->getVelocity(), &dist)) {
+
+				if(nodes[node]->getMaterial() >= 0){
+					time = fabs(dist / obstacles[nodes[node]->getMaterial()].getCRel());
+				}else{
+					time = dist;
+				}
+
+				if (time < nodes[node]->getTEncounter()) {
+					nodes[node]->setTEncounter(time);
+					nodes[node]->setObstacleNumber(i);
+					nodes[node]->setVerticeNumber(j);
+					encounters++;
+				}
+			}
+		}
+	}
+	return encounters;
 }
