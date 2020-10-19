@@ -21,48 +21,42 @@
   <component name="ChangeListManager">
     <list default="true" id="aa68926c-81ef-4aea-8eed-15ffd3a7241f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_propagate" beforeDir="false" afterPath="$PROJECT_DIR$/1_propagate" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/1_propagate.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/1_propagate.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/3_focus" beforeDir="false" afterPath="$PROJECT_DIR$/3_focus" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor0/baseline.txt_shift_0.00_000.csv_HIHIHILB.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor0/baseline.txt_shift_0.00_000.csv_hilb.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor0/baseline.txt_shift_0.00_000.csv_hilb.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor0/baseline.txt_shift_0.00_000.csv_prehilb.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor0/baseline.txt_shift_0.00_000.csv_spectrum_.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor0/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor0/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor1/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor1/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor10/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor10/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor11/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor11/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor12/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor12/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor13/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor13/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor14/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor14/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor15/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor15/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor16/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor16/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor17/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor17/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor18/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor18/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor19/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor19/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor2/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor2/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor20/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor20/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor21/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor21/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor22/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor22/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor23/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor23/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor24/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor24/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor25/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor25/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor26/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor26/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor27/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor27/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor28/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor28/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor29/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor29/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor3/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor3/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor30/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor30/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor31/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor31/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor4/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor4/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor5/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor5/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor6/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor6/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor7/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor7/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor8/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor8/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor9/spectrum.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor9/spectrum.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/phasing.c" beforeDir="false" afterPath="$PROJECT_DIR$/phasing.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/csv2png.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor2/baseline.txt_shift_0.00_002.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor2/baseline.txt_shift_0.00_002.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/baseline/data_after_propagate/baseline.txt_shift_0.00_000.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fin_waves_3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fin_waves_3u.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fin_waves_5.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fin_waves_5u.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finfin_0.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finfin_3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finfin_5.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/names.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/obstacles.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p0.3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p0.4.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p0.5.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p0.6.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p0.7.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p0.8.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p0.9.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p1.0.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p1.1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p1.2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p1.3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p1.4.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p1.5.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p1.6.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p1.8.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p2.0.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p_serial.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/p_serial_r.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/run_full_pipeline.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run_full_pipeline.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup_3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup_5.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,6 +98,15 @@
     <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
