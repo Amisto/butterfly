@@ -1,6 +1,5 @@
-#!/usr/bin/python3
-
-import matplotlib.pyplot as plt
+from hilbertize_functions import final, dir  # function to create final files
+import matplotlib.pyplot as plt  # directory for saving
 import argparse
 import os
 import re
@@ -15,13 +14,6 @@ matplotlib.use('Agg')
 # Creating parser for powershell
 parser = argparse.ArgumentParser(description='Hilbertizing sensor data')
 
-parser.add_argument(  # creates a list of csv files
-    'files',
-    metavar='FILES',
-    nargs='+',
-    help='List of CSV files with solo sensor data'
-)
-
 parser.add_argument(
     '--window',
     required=True,
@@ -29,22 +21,27 @@ parser.add_argument(
     metavar='WINDOW',
     help='Width of the frequency window'
 )
-args = parser.parse_args()  # 2 arguments at all
+args = parser.parse_args()
+cnt = 0
+cnt_dirs = 0
+file_names = []
+for i in range(0, 32):
+    file_name = os.listdir('data/baseline/Sensor{}/'.format(i))
+    file_names.append(file_name)
+raw_data=[]
+tpl = r'^raw\d+.csv$'
+for dr in file_names:
+    for i in dr:
+        if re.match(tpl, i):
+            raw_data.append(i)
+        else:
+            continue
 
 
-def final(file, val, pref):
-    max_data = max(map(max, val))
-    min_data = min(map(min, val))
-    data_color = [[int(255*(x-min_data)/(max_data-min_data))
-                   for x in l] for l in val]
-    with open(file+pref, 'wb') as fpng:
-        w = png.Writer(len(val[0]), len(val), greyscale=True)
-        w.write(fpng, data_color)
-
-
-for one_file in args.files:
-    with open(one_file) as fi:
-        with open(one_file+"_hilb.csv", 'w') as fo:  # TODO! FIX THE ROOTS OF SAVING FILES
+for one_file in raw_data:
+    # for saving files by dirs
+    with open(dir.format(cnt) + '/'+ one_file) as fi:
+        with open(dir.format(cnt)+"/hilb.csv", 'w') as fo:
             vals_init = [[float(x) for x in l.split()] for l in fi.readlines()]
             vals = list(zip(*vals_init))
             # Narrowband filtering + Hilbert transformation
@@ -52,15 +49,15 @@ for one_file in args.files:
             maxf = 0
             for i, row in enumerate(vals):
                 fft = np.fft.rfft(row)
-
                 # this is to check the spectrum and find the carrying freauency
                 # near-zero freqencies somehow are exremely large
                 plt.plot(np.abs(fft)[10:])
                 maxf += np.abs(fft)[10:].argmax()
-
                 #plt.savefig(args.output + "_fft_" + str(i) + ".png")
                 # plt.clf()
+
             mid = maxf/len(vals)
+
             for i, row in enumerate(vals):
                 fft = np.fft.rfft(row)
                 for j, freq in enumerate(fft):
@@ -68,8 +65,10 @@ for one_file in args.files:
                     if not (mid - args.window/2.0 <= j <= mid + args.window/2.0):
                         fft[j] = 0
                 res_fft.append(np.abs(hilbert(np.fft.irfft(fft))))
+
             print(mid)
-            plt.savefig(one_file + "_spectrum_" + ".png")
+            # saving spectrum
+            plt.savefig(dir.format(cnt) +'/spectrum' + ".png" )
             plt.cla()
             res = list(zip(*res_fft))
             max_data = max(map(max, res))
@@ -80,8 +79,10 @@ for one_file in args.files:
                     stri += str(round((t - min_data)/(max_data-min_data), 2))
                     stri += " "
                 print(stri, file=fo)
+                #Hello, my name is Karmanich
+                #Hello, Karmanich!
 
-            with open(one_file+"_HIHIHILB.csv", 'w') as fu:
+            with open(dir.format(cnt) + "/2hilb.csv", 'w') as fu:
                 for r in vals_init:
                     stri = ""
                     for t in r:
@@ -89,7 +90,7 @@ for one_file in args.files:
                         stri += " "
                     print(stri, file=fu)
 
-            # TODO! FIX THE ROOTS OF SAVING FILES AND OPENINGS
-            final(file=one_file, val=vals_init, pref="_prehilb.png")
+            final(file=dir.format(cnt), val=vals_init, pref="/prehilb.png")
             # writing final graphics
-            final(file=one_file, val=res, pref="_hilb.png")
+            final(file=dir.format(cnt), val=res, pref="/2hilb.png")
+    cnt += 1  # plussing to copy next files in another folder
