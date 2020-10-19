@@ -21,42 +21,9 @@
   <component name="ChangeListManager">
     <list default="true" id="aa68926c-81ef-4aea-8eed-15ffd3a7241f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_propagate.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/1_propagate.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/csv2png.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/Sensor2/baseline.txt_shift_0.00_002.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/baseline/Sensor2/baseline.txt_shift_0.00_002.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/baseline/data_after_propagate/baseline.txt_shift_0.00_000.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fin_waves_3.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fin_waves_3u.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fin_waves_5.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fin_waves_5u.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/finfin_0.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/finfin_3.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/finfin_5.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/names.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obstacles.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p0.3.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p0.4.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p0.5.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p0.6.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p0.7.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p0.8.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p0.9.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p1.0.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p1.1.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p1.2.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p1.3.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p1.4.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p1.5.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p1.6.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p1.8.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p2.0.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p_serial.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/p_serial_r.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/4_sectorize.py" beforeDir="false" afterPath="$PROJECT_DIR$/4_sectorize.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/phasing.c" beforeDir="false" afterPath="$PROJECT_DIR$/phasing.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run_full_pipeline.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run_full_pipeline.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup_3.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup_5.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

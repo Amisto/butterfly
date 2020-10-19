@@ -46,7 +46,7 @@ def interpolate3(v0, v1, v2, v3, factor):
 args = parser.parse_args()
 
 for one_file in args.files:
-    with open(one_file) as ff:
+    with open("data/final_raw_data.csv") as ff:
         data = [[abs(float(x)) for x in l.split()] for l in ff.readlines()]
 
         h = len(data)*1.0
@@ -128,7 +128,7 @@ for one_file in args.files:
 
         min_data = min(map(min, new_data))
         data_color = [[int(255*(x-min_data)/(max_data-min_data)) for x in l] for l in new_data]
-        with open(one_file+"_"+args.output+"_sectorized.png", 'wb') as fff:
+        with open("data/result.png", 'wb') as fff:
             w = png.Writer(nw+1, nh+1, greyscale=True)
             w.write(fff, data_color)
  

@@ -76,7 +76,7 @@ void phasing(char* fout, double antiattenuator)
                     res[i][l] += values[j][k][delayed];
                 }
     }
-    sprintf(fname, "phased_%s.csv", fout);
+    sprintf(fname, "./data/final_raw_data.csv", fout);
     fo = fopen(fname, "w");
     if (!fo) {printf("no file %s to write\n", fname); exit(-1);}
     for (i=0; i<rays_num; i++)
