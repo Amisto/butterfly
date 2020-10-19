@@ -5,4 +5,4 @@ g++ 1_propagate.cpp -o 1_propagate -lm -O3
 time python3 2_hilbertize.py --window 10000
 g++ 3_focus.cpp -o 3_focus -lm -O3
 time ./3_focus baseline.txt setup_base.txt
-time ./4_sectorize.py phased*.csv -o sect
+time python3 4_sectorize.py
