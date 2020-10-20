@@ -3,6 +3,7 @@
 
 #include "Vector2.h"
 #include <vector>
+#include <cmath>
 
 class Node {
  private:
@@ -52,8 +53,10 @@ class Node {
 	const std::vector<Node *> getNeighborsRight() const;
 	int getMarkedForTheKill() const;
 
+	double getTime(double dist, double c_rel) const;
+
 };
 
-bool isOutside(const Node& Node);
+bool isOutside(const Node &Node);
 
 #endif //SOLVER_NODE_H

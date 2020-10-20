@@ -1,7 +1,6 @@
 #include "Solver.h"
 #include <fstream>
 #include <iostream>
-#include <cmath>
 
 Solver::Solver() {
 	init();
@@ -111,11 +110,7 @@ int Solver::checkObstacles(int node) {
 							nodes[node]->getVelocity(),
 							&dist)) {
 
-				if (nodes[node]->getMaterial() >= 0) {
-					time = fabs(dist / obstacles[nodes[node]->getMaterial()].getCRel());
-				} else {
-					time = dist;
-				}
+				time = nodes[node]->getTime(dist, obstacles[nodes[node]->getMaterial()].getCRel());
 
 				if (time < nodes[node]->getTEncounter()) {
 					nodes[node]->setTEncounter(time);
@@ -128,6 +123,7 @@ int Solver::checkObstacles(int node) {
 	}
 	return encounters;
 }
+
 int Solver::checkDots(int node) {
 	int encounters = 0;
 	double time = INFINITY;
@@ -141,12 +137,7 @@ int Solver::checkDots(int node) {
 		if (isPointInRect(dots[i].getPos(), nodePos, rightNodePos, nodeNextPos, rightNodeNextPos)) {
 			double dist = distanceToSegment(nodes[node]->getPos(), nodes[node]->getRight()->getPos(), dots[i].getPos());
 
-			//duplicate code
-			if (nodes[node]->getMaterial() >= 0) {
-				time = fabs(dist / obstacles[nodes[node]->getMaterial()].getCRel());
-			} else {
-				time = dist;
-			}
+			time = nodes[node]->getTime(dist, obstacles[nodes[node]->getMaterial()].getCRel());
 
 			if (time < nodes[node]->getTEncounter()) {
 				nodes[node]->setTEncounter(time);
@@ -156,5 +147,21 @@ int Solver::checkDots(int node) {
 			}
 		}
 	}
+	for (int i = 0; i < SENSORS; i++) {
+		if (isPointInRect(sensors[i].getPos(), nodePos, rightNodePos, nodeNextPos, rightNodeNextPos)) {
+			double dist = distanceToSegment(nodes[node]->getPos(), nodes[node]->getRight()->getPos(),
+											sensors[i].getPos());
+
+			time = nodes[node]->getTime(dist, obstacles[nodes[node]->getMaterial()].getCRel());
+
+			std::vector<Writing> writing = sensors[i].getWriting();
+			if (time < nodes[node]->getTEncounter()) {
+				writing.push_back(Writing(-time, nodes[node]->getIntensity(),
+										  1.0 / nodes[node]->getVelocity().getY()));
+			}
+			sensors[i].setWriting(writing);
+		}
+	}
+
 	return encounters;
 }

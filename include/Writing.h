@@ -11,6 +11,8 @@ class Writing {
 	Node *node;
 
  public:
+	Writing(double time, double brightness, double frequency_correction);
+
 	double getTime() const;
 	double getBrightness() const;
 	double getFrequencyCorrection() const;

@@ -98,6 +98,13 @@ void Node::setMarkedForTheKill(int marked_for_the_kill) {
 const Vector2 Node::getPosAfterStep(double step) const {
 	return Vector2(pos.getX() + velocity.getX() * step, pos.getY() + velocity.getY() * step);
 }
+double Node::getTime(double dist, double c_rel) const {
+	if (material >= 0) {
+		return fabs(dist / c_rel);
+	} else {
+		return dist;
+	}
+}
 
 bool isOutside(const Node &Node) {
 	return Node.getPos().getX() > X || Node.getPos().getX() < 0 || Node.getPos().getY() > Y || Node.getPos().getY() < 0;

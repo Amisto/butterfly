@@ -1,5 +1,8 @@
 #include "Writing.h"
 
+Writing::Writing(double time, double brightness, double frequency_correction)
+	: time(time), brightness(brightness), frequency_correction(frequency_correction) {}
+
 double Writing::getTime() const {
 	return time;
 }
