@@ -85,9 +85,22 @@ void Solver::initExplosion(Vector2 pos) {
 
 void Solver::step() {
 	for (int node = 0; node < nodesNum; node++) {
-		checkObstacles(node);
-		checkDots(node);
+		int encounters = 0;
+		encounters += checkObstacles(node);
+		encounters += checkDots(node);
+
+		if (encounters <= 0) {
+			nodes[node]->setTEncounter(-1);
+		}
 	}
+
+	double timeStep = DT_DIGITIZATION * T_MULTIPLIER;
+	for (int node = 0; node < nodesNum; node++) {
+		if (nodes[node]->getTEncounter() > -1) {
+			timeStep = std::min(timeStep, nodes[node]->getTEncounter());
+		}
+	}
+
 }
 
 int Solver::checkObstacles(int node) {

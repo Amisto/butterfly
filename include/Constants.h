@@ -7,3 +7,5 @@
 #define Y 500.0
 #define ZERO 0.000001
 #define POINTS_IN_DOT_WAVEFRONT 4000
+#define T_MULTIPLIER 0.005
+#define DT_DIGITIZATION 16.0e-1
