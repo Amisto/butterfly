@@ -101,6 +101,10 @@ void Solver::step() {
 		}
 	}
 
+	for (int node = 0; node < nodesNum; node++) {
+		nodes[node]->update(timeStep, obstacles[nodes[node]->getMaterial()].getCRel());
+	}
+
 }
 
 int Solver::checkObstacles(int node) {

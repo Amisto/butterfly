@@ -67,6 +67,7 @@ class Node {
 	int getMarkedForTheKill() const;
 
 	double getTime(double dist, double c_rel) const;
+	void update(double timeStep, double c_rel);
 
 };
 

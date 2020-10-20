@@ -1,7 +1,6 @@
 #include "Node.h"
 #include "Constants.h"
 
-
 Node::Node(const Vector2 &pos,
 		   const Vector2 &velocity,
 		   int material,
@@ -121,6 +120,15 @@ double Node::getTime(double dist, double c_rel) const {
 		return fabs(dist / c_rel);
 	} else {
 		return dist;
+	}
+}
+
+void Node::update(double timeStep, double c_rel) {
+	pos.setX(velocity.getX() * timeStep * (material >= 0 ? c_rel : 1.0));
+	pos.setY(velocity.getX() * timeStep * (material >= 0 ? c_rel : 1.0));
+
+	if ((t_encounter <= INFINITY) && (t_encounter != -1)) {
+		t_encounter -= timeStep;
 	}
 }
 
