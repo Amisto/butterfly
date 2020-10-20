@@ -95,6 +95,7 @@ void Solver::initExplosion(Vector2 pos) {
 void Solver::step() {
 	for (int node = 0; node < nodesNum; node++) {
 		checkObstacles(node);
+		checkDots(node);
 	}
 }
 
@@ -104,11 +105,15 @@ int Solver::checkObstacles(int node) {
 
 	for (int i = 0; i < OBSTACLES; i++) {
 		for (int j = 0; j < VERTICES - 1; j++) {
-			if (doIntersect(obstacles[i].getPos(j),obstacles[i].getPos(j+1),nodes[node]->getPos(),nodes[node]->getVelocity(), &dist)) {
+			if (doIntersect(obstacles[i].getPos(j),
+							obstacles[i].getPos(j + 1),
+							nodes[node]->getPos(),
+							nodes[node]->getVelocity(),
+							&dist)) {
 
-				if(nodes[node]->getMaterial() >= 0){
+				if (nodes[node]->getMaterial() >= 0) {
 					time = fabs(dist / obstacles[nodes[node]->getMaterial()].getCRel());
-				}else{
+				} else {
 					time = dist;
 				}
 
@@ -118,6 +123,36 @@ int Solver::checkObstacles(int node) {
 					nodes[node]->setVerticeNumber(j);
 					encounters++;
 				}
+			}
+		}
+	}
+	return encounters;
+}
+int Solver::checkDots(int node) {
+	int encounters = 0;
+	double time = INFINITY;
+
+	Vector2 nodePos = nodes[node]->getPosAfterStep(10);
+	Vector2 rightNodePos = nodes[node]->getRight()->getPosAfterStep(10);
+	Vector2 nodeNextPos = nodes[node]->getPosAfterStep(1000);
+	Vector2 rightNodeNextPos = nodes[node]->getRight()->getPosAfterStep(1000);
+
+	for (int i = 0; i < DOTS; i++) {
+		if (isPointInRect(dots[i].getPos(), nodePos, rightNodePos, nodeNextPos, rightNodeNextPos)) {
+			double dist = distanceToSegment(nodes[node]->getPos(), nodes[node]->getRight()->getPos(), dots[i].getPos());
+
+			//duplicate code
+			if (nodes[node]->getMaterial() >= 0) {
+				time = fabs(dist / obstacles[nodes[node]->getMaterial()].getCRel());
+			} else {
+				time = dist;
+			}
+
+			if (time < nodes[node]->getTEncounter()) {
+				nodes[node]->setTEncounter(time);
+				nodes[node]->setObstacleNumber(-1);
+				nodes[node]->setVerticeNumber(i);
+				encounters++;
 			}
 		}
 	}

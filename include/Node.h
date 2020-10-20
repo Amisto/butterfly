@@ -39,6 +39,7 @@ class Node {
 	void setMarkedForTheKill(int marked_for_the_kill);
 
 	const Vector2 getPos() const;
+	const Vector2 getPosAfterStep(double step) const;
 	const Vector2 getVelocity() const;
 	int getMaterial() const;
 	double getIntensity() const;

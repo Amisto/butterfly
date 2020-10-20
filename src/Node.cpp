@@ -95,7 +95,10 @@ void Node::setNeighborsRight(const std::vector<Node *> &neighbors_right) {
 void Node::setMarkedForTheKill(int marked_for_the_kill) {
 	this->marked_for_the_kill = marked_for_the_kill;
 }
+const Vector2 Node::getPosAfterStep(double step) const {
+	return Vector2(pos.getX() + velocity.getX() * step, pos.getY() + velocity.getY() * step);
+}
 
-bool isOutside(const Node& Node) {
-    return Node.getPos().getX() > X || Node.getPos().getX() < 0 || Node.getPos().getY() > Y || Node.getPos().getY() < 0;
+bool isOutside(const Node &Node) {
+	return Node.getPos().getX() > X || Node.getPos().getX() < 0 || Node.getPos().getY() > Y || Node.getPos().getY() < 0;
 }

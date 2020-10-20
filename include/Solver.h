@@ -21,6 +21,7 @@ class Solver {
 	double PIES = 0;
 
 	int checkObstacles(int node);
+	int checkDots(int node);
 
  public:
 	Solver();
