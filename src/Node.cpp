@@ -1,6 +1,22 @@
 #include "Node.h"
 #include "Constants.h"
 
+
+Node::Node(const Vector2 &pos,
+		   const Vector2 &velocity,
+		   int material,
+		   double intensity,
+		   double t_encounter,
+		   int obstacle_number,
+		   int vertice_number,
+		   Node *left,
+		   Node *right,
+		   int marked_for_the_kill,
+		   const std::vector<Node *> &neighbors_left,
+		   const std::vector<Node *> &neighbors_right) {
+
+}
+
 const Vector2 Node::getPos() const {
 	return pos;
 }
@@ -95,9 +111,11 @@ void Node::setNeighborsRight(const std::vector<Node *> &neighbors_right) {
 void Node::setMarkedForTheKill(int marked_for_the_kill) {
 	this->marked_for_the_kill = marked_for_the_kill;
 }
+
 const Vector2 Node::getPosAfterStep(double step) const {
 	return Vector2(pos.getX() + velocity.getX() * step, pos.getY() + velocity.getY() * step);
 }
+
 double Node::getTime(double dist, double c_rel) const {
 	if (material >= 0) {
 		return fabs(dist / c_rel);

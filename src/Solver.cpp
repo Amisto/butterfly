@@ -63,27 +63,19 @@ void Solver::propagate() {
 void Solver::initExplosion(Vector2 pos) {
 	nodesNum = 0;
 	int n = POINTS_IN_DOT_WAVEFRONT * 2;
-	for (int i = 0; i < n; i++) {
-		Node *temp = new Node;
-		temp->setMaterial(-1);
-		temp->setNeighborsLeft(std::vector<Node *>());
-		temp->setNeighborsRight(std::vector<Node *>());
-		temp->setTEncounter(INFINITY);
-		temp->setLeft(NULL);
-		temp->setRight(NULL);
-		nodes[nodesNum++] = temp;
-		temp->setIntensity(1.0);
-		temp->setMarkedForTheKill(0);
 
-		double angle = 0;
-		angle = 2 * M_PI * i / (double) n;
-		temp->setVelocity(Vector2(cos(angle), sin(angle)));
-		temp->setPos(pos);
+	for (int i = 0; i < n; i++) {
+		double angle = 2.0 * M_PI * i / (double) n;
+		Vector2 velocity(cos(angle), sin(angle));
+		Node *temp = new Node(pos, velocity);
+		nodes[nodesNum++] = temp;
 	}
+
 	for (int i = 1; i < n - 1; i++) {
 		nodes[i]->setLeft(nodes[i - 1]);
 		nodes[i]->setRight(nodes[i + 1]);
 	}
+
 	nodes[0]->setRight(nodes[1]);
 	nodes[0]->setLeft(nodes[n - 1]);
 	nodes[n - 1]->setLeft(nodes[n - 2]);

@@ -26,6 +26,19 @@ class Node {
 	int marked_for_the_kill;
 
  public:
+	Node(const Vector2 &pos,
+		 const Vector2 &velocity,
+		 int material=-1,
+		 double intensity=1.0,
+		 double t_encounter=INFINITY,
+		 int obstacle_number=0,
+		 int vertice_number=0,
+		 Node *left=NULL,
+		 Node *right=NULL,
+		 int marked_for_the_kill=0,
+		 const std::vector<Node *> &neighbors_left=std::vector<Node *>(),
+		 const std::vector<Node *> &neighbors_right=std::vector<Node *>());
+
 	void setPos(const Vector2 &pos);
 	void setVelocity(const Vector2 &velocity);
 	void setMaterial(int material);
