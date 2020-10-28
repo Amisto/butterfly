@@ -1,3 +1,4 @@
+#include <Obstacle.h>
 #include "Node.h"
 #include "Constants.h"
 
@@ -130,6 +131,22 @@ void Node::update(double timeStep, double c_rel) {
 	if ((t_encounter <= INFINITY) && (t_encounter != -1)) {
 		t_encounter -= timeStep;
 	}
+}
+
+Node Node::getReflected(Obstacle obstacle) {
+	double i = intensity;
+	return Node(Vector2(1.00015 * velocity.getX(), 1.00015 * velocity.getY()),
+				::getReflected(obstacle.getPos(vertice_number), obstacle.getPos(vertice_number + 1),
+							 velocity, obstacle.getCRel(), &i),
+				i);
+}
+
+Node Node::getRefracted(Obstacle obstacle) {
+	double i = intensity;
+	return Node(Vector2(1.00015 * velocity.getX(), 1.00015 * velocity.getY()),
+				::getRefracted(obstacle.getPos(vertice_number), obstacle.getPos(vertice_number + 1),
+							 velocity, obstacle.getCRel(), &i),
+				i);
 }
 
 bool isOutside(const Node &Node) {

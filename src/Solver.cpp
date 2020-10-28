@@ -174,3 +174,15 @@ int Solver::checkDots(int node) {
 
 	return encounters;
 }
+void Solver::handleReflection() {
+	double delta = 0.5;
+	for (int i = 0; i < nodesNum; i++) {
+		if (nodes[i]->getTEncounter() < ZERO && nodes[i]->getTEncounter() > -delta) {
+			if (nodes[i]->getMaterial() >= 0) {
+				Node reflected = nodes[i]->getReflected(obstacles[nodes[i]->getObstacleNumber()]);
+				Node refracted = nodes[i]->getRefracted(obstacles[nodes[i]->getObstacleNumber()]);
+			}
+		}
+	}
+
+}

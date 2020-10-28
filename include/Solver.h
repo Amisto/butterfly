@@ -22,6 +22,7 @@ class Solver {
 
 	int checkObstacles(int node);
 	int checkDots(int node);
+	void handleReflection();
 
  public:
 	Solver();
