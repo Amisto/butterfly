@@ -181,6 +181,25 @@ void Solver::handleReflection() {
 			if (nodes[i]->getMaterial() >= 0) {
 				Node reflected = nodes[i]->getReflected(obstacles[nodes[i]->getObstacleNumber()]);
 				Node refracted = nodes[i]->getRefracted(obstacles[nodes[i]->getObstacleNumber()]);
+
+				// real neighbors always turn to ghost ones -
+				// reflected go to the other direction, refracted are in another material
+				if(nodes[i]->getLeft()){
+					Node* left = nodes[i]->getLeft();
+					reflected.addLeftNeighbor(left);
+					refracted.addLeftNeighbor(left);
+					left->addRightNeighbor(&reflected);
+					left->addLeftNeighbor(&refracted);
+					nodes[i]->setLeft(left);
+				}
+				if(nodes[i]->getRight()){
+					Node* right = nodes[i]->getRight();
+					reflected.addRightNeighbor(right);
+					refracted.addRightNeighbor(right);
+					right->addRightNeighbor(&reflected);
+					right->addLeftNeighbor(&refracted);
+					nodes[i]->setRight(right);
+				}
 			}
 		}
 	}

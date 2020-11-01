@@ -49,7 +49,9 @@ class Node {
 	void setLeft(Node *left);
 	void setRight(Node *right);
 	void setNeighborsLeft(const std::vector<Node *> &neighbors_left);
+	void addLeftNeighbor(Node *neighbor);
 	void setNeighborsRight(const std::vector<Node *> &neighbors_right);
+	void addRightNeighbor(Node *neighbor);
 	void setMarkedForTheKill(int marked_for_the_kill);
 
 	const Vector2 getPos() const;

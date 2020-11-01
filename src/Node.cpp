@@ -149,6 +149,14 @@ Node Node::getRefracted(Obstacle obstacle) {
 				i);
 }
 
+void Node::addLeftNeighbor(Node *neighbor) {
+	neighbors_left.push_back(neighbor);
+}
+
+void Node::addRightNeighbor(Node *neighbor) {
+	neighbors_right.push_back(neighbor);
+}
+
 bool isOutside(const Node &Node) {
 	return Node.getPos().getX() > X || Node.getPos().getX() < 0 || Node.getPos().getY() > Y || Node.getPos().getY() < 0;
 }
