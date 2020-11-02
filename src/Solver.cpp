@@ -138,13 +138,13 @@ int Solver::checkDots(int node) {
 	double time = INFINITY;
 
 	Vector2 nodePos = nodes[node]->getPosAfterStep(10);
-	Vector2 rightNodePos = nodes[node]->getRealRight()->getPosAfterStep(10);
+	Vector2 rightNodePos = nodes[node]->getRight()->getPosAfterStep(10);
 	Vector2 nodeNextPos = nodes[node]->getPosAfterStep(1000);
-	Vector2 rightNodeNextPos = nodes[node]->getRealRight()->getPosAfterStep(1000);
+	Vector2 rightNodeNextPos = nodes[node]->getRight()->getPosAfterStep(1000);
 
 	for (int i = 0; i < DOTS; i++) {
 		if (isPointInRect(dots[i].getPos(), nodePos, rightNodePos, nodeNextPos, rightNodeNextPos)) {
-			double dist = distanceToSegment(nodes[node]->getPos(), nodes[node]->getRealRight()->getPos(), dots[i].getPos());
+			double dist = distanceToSegment(nodes[node]->getPos(), nodes[node]->getRight()->getPos(), dots[i].getPos());
 
 			time = nodes[node]->getTime(dist, obstacles[nodes[node]->getMaterial()].getCRel());
 
@@ -158,7 +158,7 @@ int Solver::checkDots(int node) {
 	}
 	for (int i = 0; i < SENSORS; i++) {
 		if (isPointInRect(sensors[i].getPos(), nodePos, rightNodePos, nodeNextPos, rightNodeNextPos)) {
-			double dist = distanceToSegment(nodes[node]->getPos(), nodes[node]->getRealRight()->getPos(),
+			double dist = distanceToSegment(nodes[node]->getPos(), nodes[node]->getRight()->getPos(),
 											sensors[i].getPos());
 
 			time = nodes[node]->getTime(dist, obstacles[nodes[node]->getMaterial()].getCRel());
@@ -184,16 +184,16 @@ void Solver::handleReflection() {
 
 				// real neighbors always turn to ghost ones -
 				// reflected go to the other direction, refracted are in another material
-				if(nodes[i]->getRealLeft()){
-					Node* left = nodes[i]->getRealLeft();
+				if(nodes[i]->getLeft()){
+					Node* left = nodes[i]->getLeft();
 					reflected.addLeftVirtualNeighbor(left);
 					refracted.addLeftVirtualNeighbor(left);
 					left->addRightVirtualNeighbor(&reflected);
 					left->addLeftVirtualNeighbor(&refracted);
 					nodes[i]->setLeft(left);
 				}
-				if(nodes[i]->getRealRight()){
-					Node* right = nodes[i]->getRealRight();
+				if(nodes[i]->getRight()){
+					Node* right = nodes[i]->getRight();
 					reflected.addRightVirtualNeighbor(right);
 					refracted.addRightVirtualNeighbor(right);
 					right->addRightVirtualNeighbor(&reflected);

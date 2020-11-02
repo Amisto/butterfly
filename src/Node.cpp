@@ -9,8 +9,8 @@ Node::Node(const Vector2 &pos,
 		   double t_encounter,
 		   int obstacle_number,
 		   int vertice_number,
-		   Node *real_left_neighbors,
-		   Node *real_right_neighbors,
+		   Node *left,
+		   Node *right,
 		   int marked_for_the_kill,
 		   const std::vector<Node*> &virtual_neighbors_left,
 		   const std::vector<Node*> &virtual_neighbors_right) {
@@ -45,12 +45,12 @@ int Node::getVerticeNumber() const {
 	return vertice_number;
 }
 
-Node *Node::getRealLeft() const {
-	return real_left_neighbors;
+Node *Node::getLeft() const {
+	return left;
 }
 
-Node *Node::getRealRight() const {
-	return real_right_neighbors;
+Node *Node::getRight() const {
+	return right;
 }
 
 const std::vector<Node *> Node::getVirtualLeft() const {
@@ -92,19 +92,19 @@ void Node::setObstacleNumber(int obstacle_number) {
 void Node::setVerticeNumber(int vertice_number) {
 	this->vertice_number = vertice_number;
 }
-void Node::setLeft(Node *real_left_neighbors) {
-	this->real_left_neighbors = real_left_neighbors;
+void Node::setLeft(Node *left) {
+	this->left = left;
 }
 
-void Node::setRight(Node *real_right_neighbors) {
-	this->real_right_neighbors = real_right_neighbors;
+void Node::setRight(Node *right) {
+	this->right = right;
 }
 
-void Node::setNeighborsLeft(const std::vector<Node *> &virtual_neighbors_left) {
+void Node::setVirtualLeft(const std::vector<Node *> &virtual_neighbors_left) {
 	this->virtual_neighbors_left = virtual_neighbors_left;
 }
 
-void Node::setNeighborsRight(const std::vector<Node *> &virtual_neighbors_right) {
+void Node::setVirtualRight(const std::vector<Node *> &virtual_neighbors_right) {
 	this->virtual_neighbors_right = virtual_neighbors_right;
 }
 
