@@ -1,6 +1,4 @@
-#include <Obstacle.h>
 #include "Node.h"
-#include "Constants.h"
 
 Node::Node(const Vector2 &pos,
 		   const Vector2 &velocity,
@@ -12,8 +10,8 @@ Node::Node(const Vector2 &pos,
 		   Node *left,
 		   Node *right,
 		   int marked_for_the_kill,
-		   const std::vector<Node*> &virtual_neighbors_left,
-		   const std::vector<Node*> &virtual_neighbors_right) {
+		   const std::vector<Node *> &virtual_neighbors_left,
+		   const std::vector<Node *> &virtual_neighbors_right) {
 
 }
 
@@ -137,7 +135,7 @@ Node Node::getReflected(Obstacle obstacle) {
 	double i = intensity;
 	return Node(Vector2(1.00015 * velocity.getX(), 1.00015 * velocity.getY()),
 				::getReflected(obstacle.getPos(vertice_number), obstacle.getPos(vertice_number + 1),
-							 velocity, obstacle.getCRel(), &i),
+							   velocity, obstacle.getCRel(), &i),
 				i);
 }
 
@@ -145,7 +143,7 @@ Node Node::getRefracted(Obstacle obstacle) {
 	double i = intensity;
 	return Node(Vector2(1.00015 * velocity.getX(), 1.00015 * velocity.getY()),
 				::getRefracted(obstacle.getPos(vertice_number), obstacle.getPos(vertice_number + 1),
-							 velocity, obstacle.getCRel(), &i),
+							   velocity, obstacle.getCRel(), &i),
 				i);
 }
 
@@ -162,18 +160,33 @@ bool isOutside(const Node &Node) {
 }
 
 void Node::virtualHandler(Node &ray, bool isRightNeighbor) {
-    // boolean "isRightNeighbor" allows to avoid code duplication
-    if (ray.getMaterial() == this->getMaterial()
-        && scalar(ray.getVelocity(), this->getVelocity()) > 0
-        && length(ray.getPos(), this->getPos()) < 5 * MINLEN) {
-        // if a wavefront is already restored, we don't bifurcate it
-        if (!this->getLeft() && isRightNeighbor) {
-            ray.setRight(this);
-            this->setLeft(&ray);
-        } else if (!this->getRight() && !isRightNeighbor) {
-            ray.setLeft(this);
-            this->setRight(&ray);
-            this->setTEncounter(INFINITY);
-        }
-    }
+	// boolean "isRightNeighbor" allows to avoid code duplication
+
+	// managing ghost neighbors is trickier
+	// ghost neighbor turn into a real one in only one case - if they share a material id
+	// and they have approximately coinciding velocities and not too far away
+
+	if (ray.getMaterial() == this->getMaterial()
+		&& scalar(ray.getVelocity(), this->getVelocity()) > 0
+		&& length(ray.getPos(), this->getPos()) < 5 * MINLEN) {
+		// if a wavefront is already restored, we don't bifurcate it
+		if (!this->getLeft() && isRightNeighbor) {
+			ray.setRight(this);
+			this->setLeft(&ray);
+		} else if (!this->getRight() && !isRightNeighbor) {
+			ray.setLeft(this);
+			this->setRight(&ray);
+			this->setTEncounter(INFINITY);
+		}
+	}
+}
+void Node::restoreWavefront(Node &reflected, Node &refracted) {
+	for (int j = 0; j < virtual_neighbors_left.size(); j++) {
+		virtual_neighbors_left[j]->virtualHandler(reflected, false);
+		virtual_neighbors_left[j]->virtualHandler(refracted, false);
+	}
+	for (int j = 0; j < virtual_neighbors_right.size(); j++) {
+		virtual_neighbors_right[j]->virtualHandler(reflected, true);
+		virtual_neighbors_right[j]->virtualHandler(refracted, true);
+	}
 }

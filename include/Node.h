@@ -4,6 +4,9 @@
 #include "Vector2.h"
 #include <vector>
 #include <cmath>
+#include <Obstacle.h>
+#include "Constants.h"
+
 
 class Node {
  private:
@@ -53,6 +56,8 @@ class Node {
 	void setVirtualRight(const std::vector<Node *> &virtual_neighbors_right);
 	void addRightVirtualNeighbor(Node *neighbor);
 	void setMarkedForTheKill(int marked_for_the_kill);
+
+	void restoreWavefront(Node &reflected, Node &refracted);
 	void virtualHandler(Node &ray, bool isRightNeighbor);
 
 	const Vector2 getPos() const;

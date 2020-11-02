@@ -205,20 +205,7 @@ void Solver::handleReflection() {
                         nodes[i]->setRight(right);
                     }
 
-                    // managing ghost neighbors is trickier
-                    // ghost neighbor turn into a real one in only one case - if they share a material id
-                    // and they have approximately coinciding velocities
-                    // and not too far away
-                    //
-                    // the algorithm is designed to restore a wavefront after reflection
-                    for (int j = 0; j < nodes[i]->getVirtualLeft().size(); j++) {
-                        nodes[i]->getVirtualLeft()[j]->virtualHandler(reflected, false);
-                        nodes[i]->getVirtualLeft()[j]->virtualHandler(refracted, false);
-                    }
-                    for (int j = 0; j < nodes[i]->getVirtualRight().size(); j++) {
-                        nodes[i]->getVirtualRight()[j]->virtualHandler(reflected, true);
-                        nodes[i]->getVirtualRight()[j]->virtualHandler(refracted, true);
-                    }
+                    nodes[i]->restoreWavefront(reflected, refracted);
                 }
 			}
 		}
