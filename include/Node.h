@@ -53,6 +53,7 @@ class Node {
 	void setVirtualRight(const std::vector<Node *> &virtual_neighbors_right);
 	void addRightVirtualNeighbor(Node *neighbor);
 	void setMarkedForTheKill(int marked_for_the_kill);
+	void virtualHandler(Node &ray, bool isRightNeighbor);
 
 	const Vector2 getPos() const;
 	const Vector2 getPosAfterStep(double step) const;

@@ -175,23 +175,6 @@ int Solver::checkDots(int node) {
 	return encounters;
 }
 
-checkerForHandler(const std::vector<Node*> &virtual_neighbor, Node &ray, bool right_virtual_neighbor) {
-    // boolean "right_virtual_neighbor" allows to avoid code duplication
-    if (ray.getMaterial() == virtual_neighbor.getMaterial()
-        && scalar(ray.getVelocity(), virtual_neighbor.getVelocity()) > 0
-        && length(ray.getPos(), virtual_neighbor.getPos()) < 5 * MINLEN) {
-        // if a wavefront is already restored, we don't bifurcate it
-        if (!virtual_neighbor.getLeft() && right_virtual_neighbor) {
-            ray.setRight(virtual_neighbor);
-            virtual_neighbor.setLeft(ray);
-        } else if (!virtual_neighbor.getRight() && !right_virtual_neighbor) {
-            ray.setLeft(virtual_neighbor);
-            virtual_neighbor.setRight(ray);
-            virtual_neighbor.setTEncounter(INFINITY);
-        }
-    }
-}
-
 void Solver::handleReflection() {
 	double delta = 0.5;
 	for (int i = 0; i < nodesNum; i++) {
@@ -228,13 +211,13 @@ void Solver::handleReflection() {
                     // and not too far away
                     //
                     // the algorithm is designed to restore a wavefront after reflection
-                    for (int j = 0; j < nodes[i]->neighbors_left.size(); j++) {
-                        checkerForHandler(nodes[i]->neighbors_left[j], reflected, 0);
-                        checkerForHandler(nodes[i]->neighbors_left[j], refracted, 0);
+                    for (int j = 0; j < nodes[i]->getVirtualLeft().size(); j++) {
+                        nodes[i]->getVirtualLeft()[j]->virtualHandler(reflected, false);
+                        nodes[i]->getVirtualLeft()[j]->virtualHandler(refracted, false);
                     }
-                    for (int j = 0; j < nodes[i]->neighbors_right.size(); j++) {
-                        checkerForHandler(nodes[i]->neighbors_right[j], reflected, 1);
-                        checkerForHandler(nodes[i]->neighbors_right[j], refracted, 1);
+                    for (int j = 0; j < nodes[i]->getVirtualRight().size(); j++) {
+                        nodes[i]->getVirtualRight()[j]->virtualHandler(reflected, true);
+                        nodes[i]->getVirtualRight()[j]->virtualHandler(refracted, true);
                     }
                 }
 			}

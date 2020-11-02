@@ -160,3 +160,20 @@ void Node::addRightVirtualNeighbor(Node *neighbor) {
 bool isOutside(const Node &Node) {
 	return Node.getPos().getX() > X || Node.getPos().getX() < 0 || Node.getPos().getY() > Y || Node.getPos().getY() < 0;
 }
+
+void Node::virtualHandler(Node &ray, bool isRightNeighbor) {
+    // boolean "isRightNeighbor" allows to avoid code duplication
+    if (ray.getMaterial() == this->getMaterial()
+        && scalar(ray.getVelocity(), this->getVelocity()) > 0
+        && length(ray.getPos(), this->getPos()) < 5 * MINLEN) {
+        // if a wavefront is already restored, we don't bifurcate it
+        if (!this->getLeft() && isRightNeighbor) {
+            ray.setRight(this);
+            this->setLeft(&ray);
+        } else if (!this->getRight() && !isRightNeighbor) {
+            ray.setLeft(this);
+            this->setRight(&ray);
+            this->setTEncounter(INFINITY);
+        }
+    }
+}
