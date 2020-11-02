@@ -19,9 +19,9 @@ class Node {
 	// negative obstacle number is a dot number
 
 	// to adjust performance dynamically, we want to track wavefronts and adjust the rays number
-	Node *left, *right;  // basic, "real" neighbors - they are used to maintain the uniformness of the ray front
-	std::vector<Node *> neighbors_left,
-		neighbors_right;  // additional, "virtual", "ghost" neighbors - they are used to track reflected/refracted wavefronts
+	Node *real_left_neighbors, *real_right_neighbors;  // basic, "real" neighbors - they are used to maintain the uniformness of the ray front
+	std::vector<Node *> virtual_neighbors_left,
+		virtual_neighbors_right;  // additional, "virtual", "ghost" neighbors - they are used to track reflected/refracted wavefronts
 
 	int marked_for_the_kill;
 
@@ -33,11 +33,11 @@ class Node {
 		 double t_encounter=INFINITY,
 		 int obstacle_number=0,
 		 int vertice_number=0,
-		 Node *left=NULL,
-		 Node *right=NULL,
+		 Node *real_left_neighbors=NULL,
+		 Node *real_right_neighbors=NULL,
 		 int marked_for_the_kill=0,
-		 const std::vector<Node *> &neighbors_left=std::vector<Node *>(),
-		 const std::vector<Node *> &neighbors_right=std::vector<Node *>());
+		 const std::vector<Node *> &virtual_neighbors_left=std::vector<Node *>(),
+		 const std::vector<Node *> &virtual_neighbors_right=std::vector<Node *>());
 
 	void setPos(const Vector2 &pos);
 	void setVelocity(const Vector2 &velocity);
@@ -46,12 +46,12 @@ class Node {
 	void setTEncounter(double t_encounter);
 	void setObstacleNumber(int obstacle_number);
 	void setVerticeNumber(int vertice_number);
-	void setLeft(Node *left);
-	void setRight(Node *right);
-	void setNeighborsLeft(const std::vector<Node *> &neighbors_left);
-	void addLeftNeighbor(Node *neighbor);
-	void setNeighborsRight(const std::vector<Node *> &neighbors_right);
-	void addRightNeighbor(Node *neighbor);
+	void setLeft(Node *real_left_neighbors);
+	void setRight(Node *real_right_neighbors);
+	void setNeighborsLeft(const std::vector<Node *> &virtual_neighbors_left);
+	void addLeftVirtualNeighbor(Node *neighbor);
+	void setNeighborsRight(const std::vector<Node *> &virtual_neighbors_right);
+	void addRightVirtualNeighbor(Node *neighbor);
 	void setMarkedForTheKill(int marked_for_the_kill);
 
 	const Vector2 getPos() const;
@@ -62,10 +62,10 @@ class Node {
 	double getTEncounter() const;
 	int getObstacleNumber() const;
 	int getVerticeNumber() const;
-	Node *getLeft() const;
-	Node *getRight() const;
-	const std::vector<Node *> getNeighborsLeft() const;
-	const std::vector<Node *> getNeighborsRight() const;
+	Node *getRealLeft() const;
+	Node *getRealRight() const;
+	const std::vector<Node*> getVirtualLeft() const;
+	const std::vector<Node*> getVirtualRight() const;
 	int getMarkedForTheKill() const;
 
 	double getTime(double dist, double c_rel) const;

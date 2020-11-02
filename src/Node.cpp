@@ -9,11 +9,11 @@ Node::Node(const Vector2 &pos,
 		   double t_encounter,
 		   int obstacle_number,
 		   int vertice_number,
-		   Node *left,
-		   Node *right,
+		   Node *real_left_neighbors,
+		   Node *real_right_neighbors,
 		   int marked_for_the_kill,
-		   const std::vector<Node *> &neighbors_left,
-		   const std::vector<Node *> &neighbors_right) {
+		   const std::vector<Node*> &virtual_neighbors_left,
+		   const std::vector<Node*> &virtual_neighbors_right) {
 
 }
 
@@ -45,20 +45,20 @@ int Node::getVerticeNumber() const {
 	return vertice_number;
 }
 
-Node *Node::getLeft() const {
-	return left;
+Node *Node::getRealLeft() const {
+	return real_left_neighbors;
 }
 
-Node *Node::getRight() const {
-	return right;
+Node *Node::getRealRight() const {
+	return real_right_neighbors;
 }
 
-const std::vector<Node *> Node::getNeighborsLeft() const {
-	return neighbors_left;
+const std::vector<Node *> Node::getVirtualLeft() const {
+	return virtual_neighbors_left;
 }
 
-const std::vector<Node *> Node::getNeighborsRight() const {
-	return neighbors_right;
+const std::vector<Node *> Node::getVirtualRight() const {
+	return virtual_neighbors_right;
 }
 
 int Node::getMarkedForTheKill() const {
@@ -92,20 +92,20 @@ void Node::setObstacleNumber(int obstacle_number) {
 void Node::setVerticeNumber(int vertice_number) {
 	this->vertice_number = vertice_number;
 }
-void Node::setLeft(Node *left) {
-	this->left = left;
+void Node::setLeft(Node *real_left_neighbors) {
+	this->real_left_neighbors = real_left_neighbors;
 }
 
-void Node::setRight(Node *right) {
-	this->right = right;
+void Node::setRight(Node *real_right_neighbors) {
+	this->real_right_neighbors = real_right_neighbors;
 }
 
-void Node::setNeighborsLeft(const std::vector<Node *> &neighbors_left) {
-	this->neighbors_left = neighbors_left;
+void Node::setNeighborsLeft(const std::vector<Node *> &virtual_neighbors_left) {
+	this->virtual_neighbors_left = virtual_neighbors_left;
 }
 
-void Node::setNeighborsRight(const std::vector<Node *> &neighbors_right) {
-	this->neighbors_right = neighbors_right;
+void Node::setNeighborsRight(const std::vector<Node *> &virtual_neighbors_right) {
+	this->virtual_neighbors_right = virtual_neighbors_right;
 }
 
 void Node::setMarkedForTheKill(int marked_for_the_kill) {
@@ -149,12 +149,12 @@ Node Node::getRefracted(Obstacle obstacle) {
 				i);
 }
 
-void Node::addLeftNeighbor(Node *neighbor) {
-	neighbors_left.push_back(neighbor);
+void Node::addLeftVirtualNeighbor(Node *neighbor) {
+	virtual_neighbors_left.push_back(neighbor);
 }
 
-void Node::addRightNeighbor(Node *neighbor) {
-	neighbors_right.push_back(neighbor);
+void Node::addRightVirtualNeighbor(Node *neighbor) {
+	virtual_neighbors_right.push_back(neighbor);
 }
 
 bool isOutside(const Node &Node) {
