@@ -8,7 +8,6 @@
 #include "Constants.h"
 #include "Sensor.h"
 
-
 class Node {
  private:
 	Vector2 pos;
@@ -32,16 +31,16 @@ class Node {
  public:
 	Node(const Vector2 &pos,
 		 const Vector2 &velocity,
-		 int material=-1,
-		 double intensity=1.0,
-		 double t_encounter=INFINITY,
-		 int obstacle_number=0,
-		 int vertice_number=0,
-		 Node *left=NULL,
-		 Node *right=NULL,
-		 int kill_marked=0,
-		 const std::vector<Node *> &virtual_neighbors_left=std::vector<Node *>(),
-		 const std::vector<Node *> &virtual_neighbors_right=std::vector<Node *>());
+		 int material = -1,
+		 double intensity = 1.0,
+		 double t_encounter = INFINITY,
+		 int obstacle_number = 0,
+		 int vertice_number = 0,
+		 Node *left = NULL,
+		 Node *right = NULL,
+		 int kill_marked = 0,
+		 const std::vector<Node *> &virtual_neighbors_left = std::vector<Node *>(),
+		 const std::vector<Node *> &virtual_neighbors_right = std::vector<Node *>());
 
 	void setPos(const Vector2 &pos);
 	void setVelocity(const Vector2 &velocity);
@@ -71,8 +70,8 @@ class Node {
 	int getVerticeNumber() const;
 	Node *getLeft() const;
 	Node *getRight() const;
-	const std::vector<Node*> getVirtualLeft() const;
-	const std::vector<Node*> getVirtualRight() const;
+	const std::vector<Node *> getVirtualLeft() const;
+	const std::vector<Node *> getVirtualRight() const;
 	int getMarkedForTheKill() const;
 
 	double getTime(double dist, double c_rel) const;
@@ -80,7 +79,7 @@ class Node {
 	Node getReflected(const Obstacle obstacle);
 	Node getRefracted(const Obstacle obstacle);
 	void checkInvalid(Sensor sensors[SENSORS]);
-    void killLeft();
+	void killLeft();
 	void killRight();
 	void marking();
 	void clearNeighbours();

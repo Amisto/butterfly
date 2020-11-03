@@ -184,29 +184,29 @@ void Solver::handleReflection() {
 				Node refracted = nodes[i]->getRefracted(obstacles[nodes[i]->getObstacleNumber()]);
 
 				if (reflected.getIntensity() == -1) {
-				    nodes[i]->setMarkedForTheKill(1);
+					nodes[i]->setMarkedForTheKill(1);
 				} else {
-				    // real neighbors always turn to ghost ones -
-                    // reflected go to the other direction, refracted are in another material
-                    if (nodes[i]->getLeft()) {
-                        Node *left = nodes[i]->getLeft();
-                        reflected.addLeftVirtualNeighbor(left);
-                        refracted.addLeftVirtualNeighbor(left);
-                        left->addRightVirtualNeighbor(&reflected);
-                        left->addLeftVirtualNeighbor(&refracted);
-                        nodes[i]->setLeft(left);
-                    }
-                    if (nodes[i]->getRight()) {
-                        Node *right = nodes[i]->getRight();
-                        reflected.addRightVirtualNeighbor(right);
-                        refracted.addRightVirtualNeighbor(right);
-                        right->addRightVirtualNeighbor(&reflected);
-                        right->addLeftVirtualNeighbor(&refracted);
-                        nodes[i]->setRight(right);
-                    }
+					// real neighbors always turn to ghost ones -
+					// reflected go to the other direction, refracted are in another material
+					if (nodes[i]->getLeft()) {
+						Node *left = nodes[i]->getLeft();
+						reflected.addLeftVirtualNeighbor(left);
+						refracted.addLeftVirtualNeighbor(left);
+						left->addRightVirtualNeighbor(&reflected);
+						left->addLeftVirtualNeighbor(&refracted);
+						nodes[i]->setLeft(left);
+					}
+					if (nodes[i]->getRight()) {
+						Node *right = nodes[i]->getRight();
+						reflected.addRightVirtualNeighbor(right);
+						refracted.addRightVirtualNeighbor(right);
+						right->addRightVirtualNeighbor(&reflected);
+						right->addLeftVirtualNeighbor(&refracted);
+						nodes[i]->setRight(right);
+					}
 
-                    nodes[i]->restoreWavefront(reflected, refracted);
-                }
+					nodes[i]->restoreWavefront(reflected, refracted);
+				}
 			}
 		}
 	}
