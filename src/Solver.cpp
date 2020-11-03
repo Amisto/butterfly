@@ -4,6 +4,7 @@
 
 Solver::Solver() {
 	init();
+	propagate();
 }
 
 void Solver::init() {
@@ -104,10 +105,9 @@ void Solver::step() {
 	for (int node = 0; node < nodesNum; node++) {
 		nodes[node]->update(timeStep, obstacles[nodes[node]->getMaterial()].getCRel());
 	}
+
 	handleReflection();
-	for (int node = 0; node < nodesNum; node++) {
-		nodes[node]->checkInvalid(sensors);
-	}
+	fixNodes();
 }
 
 int Solver::checkObstacles(int node) {
@@ -212,6 +212,40 @@ void Solver::handleReflection() {
 				}
 			}
 		}
+	}
+}
+void Solver::fixNodes() {
+	for (int node = 0; node < nodesNum; node++) {
+		nodes[node]->checkInvalid();
+
+		if (!nodes[node]) {
+			for (int s = 0; s < SENSORS; s++) {
+				for (int j = 0; j < sensors[s].getWriting().size(); j++) {
+					if (sensors[s].getWriting()[j].getNode() == nodes[node]) {
+						sensors[s].clearWriting();
+					}
+				}
+			}
+		}
+	}
+
+	bool cleared = false;
+	while (!cleared) {
+		while (!nodes[nodesNum - 1] && nodesNum) {
+			nodesNum--;
+		}
+		cleared = true;
+		for (int i = 0; i < nodesNum; i++) {
+			if (!nodes[i]) {
+				nodes[i] = nodes[--nodesNum];
+				cleared = false;
+				break;
+			}
+		}
+	}
+
+	for (int node = 0; node < nodesNum; node++) {
+		nodes[node]->clearNeighbours();
 	}
 }
 

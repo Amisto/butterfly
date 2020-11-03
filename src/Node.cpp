@@ -219,7 +219,7 @@ void Node::killRight() {
 	}
 }
 
-void Node::checkInvalid(Sensor sensors[SENSORS]) {
+void Node::checkInvalid() {
 	if (intensity < VISIBILITY_THRESHOLD || isOutside(this)
 		|| (!left && !right && !(virtual_neighbors_left.size()) && !(virtual_neighbors_right.size()))) {
 		kill_marked = 1;
@@ -236,13 +236,6 @@ void Node::checkInvalid(Sensor sensors[SENSORS]) {
 		killRight();
 		virtual_neighbors_left.clear();
 		virtual_neighbors_right.clear();
-		for (int s = 0; s < SENSORS; s++) {
-			for (int j = 0; j < sensors[s].getWriting().size(); j++) {
-				if (sensors[s].getWriting()[j].getNode() == this) {
-					sensors[s].clearWriting();
-				}
-			}
-		}
 		delete this;
 	}
 

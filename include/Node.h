@@ -6,7 +6,6 @@
 #include <cmath>
 #include <Obstacle.h>
 #include "Constants.h"
-#include "Sensor.h"
 
 class Node {
  private:
@@ -78,7 +77,7 @@ class Node {
 	void update(double timeStep, double c_rel);
 	Node getReflected(const Obstacle obstacle);
 	Node getRefracted(const Obstacle obstacle);
-	void checkInvalid(Sensor sensors[SENSORS]);
+	void checkInvalid();
 	void killLeft();
 	void killRight();
 	void clearNeighbours();

@@ -32,6 +32,7 @@ class Solver {
 	void propagate();
 	void initExplosion(Vector2 pos);
 	void step();
+	void fixNodes();
 };
 
 #endif //SOLVER_SRC_SYSTEM_H_
