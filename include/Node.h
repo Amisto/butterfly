@@ -6,6 +6,7 @@
 #include <cmath>
 #include <Obstacle.h>
 #include "Constants.h"
+#include "Sensor.h"
 
 
 class Node {
@@ -78,6 +79,8 @@ class Node {
 	void update(double timeStep, double c_rel);
 	Node getReflected(const Obstacle obstacle);
 	Node getRefracted(const Obstacle obstacle);
+	void checkInvalid(int n_nodes, Node *nodes[300000], std::vector<Node *> neighbors_left, 
+std::vector<Node *> neighbors_right, Sensor sensors[SENSORS]);
 
 };
 

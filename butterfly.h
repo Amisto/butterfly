@@ -81,7 +81,8 @@ struct Node         // a ray
     // additional, "virtual", "ghost" neighbors - they are used to track reflected/refracted wavefronts
 
     int kill_marked;
-} *nodes[300000] = {NULL};
+} 
+*nodes[300000] = {NULL};
 int n_nodes;
 
 struct Writing {

@@ -1,5 +1,6 @@
 #include "Node.h"
-
+#define VISIBILITY_THRESHOLD    0.08 //defining constant necessary in 1 method
+#define SENSORS                 32 //number of sensors
 Node::Node(const Vector2 &pos,
 		   const Vector2 &velocity,
 		   int material,
@@ -155,8 +156,8 @@ void Node::addRightVirtualNeighbor(Node *neighbor) {
 	virtual_neighbors_right.push_back(neighbor);
 }
 
-bool isOutside(const Node &Node) {
-	return Node.getPos().getX() > X || Node.getPos().getX() < 0 || Node.getPos().getY() > Y || Node.getPos().getY() < 0;
+bool isOutside(Node *Node) {
+	return Node->getPos().getX() > X || Node->getPos().getX() < 0 || Node->getPos().getY() > Y || Node->getPos().getY() < 0;
 }
 
 void Node::virtualHandler(Node &ray, bool isRightNeighbor) {
@@ -190,3 +191,80 @@ void Node::restoreWavefront(Node &reflected, Node &refracted) {
 		virtual_neighbors_right[j]->virtualHandler(refracted, true);
 	}
 }
+void Node::checkInvalid(int n_nodes, Node *nodes[300000], std::vector<Node *> neighbors_left, 
+std::vector<Node *> neighbors_right, Sensor sensors[SENSORS]){
+	for (int i = 0; i < n_nodes; i++)
+            if (nodes[i]->intensity < VISIBILITY_THRESHOLD
+                || isOutside(nodes[i])
+                || (!nodes[i]->left && !nodes[i]->right && !(nodes[i]->virtual_neighbors_left.size()) &&
+                    !(nodes[i]->virtual_neighbors_right.size()))
+                    )// || nodes[i]->t_encounter < -0.5)
+                nodes[i]->kill_marked = 1;
+
+        for (int i = 0; i < n_nodes; i++) {
+            if (nodes[i]->kill_marked) {
+                if (nodes[i]->left) nodes[i]->left->right = NULL;
+                if (nodes[i]->right) nodes[i]->right->left = NULL;
+
+                for (int j = 0; j < nodes[i]->virtual_neighbors_left.size(); j++)
+                    if (nodes[i]->virtual_neighbors_left[j])
+                        for (int k = 0; k < nodes[i]->virtual_neighbors_left[j]->virtual_neighbors_right.size(); k++)
+                            if (nodes[i]->virtual_neighbors_left[j]->virtual_neighbors_right[k] == nodes[i])
+                                nodes[i]->virtual_neighbors_left[j]->virtual_neighbors_right[k] = NULL; 
+								// dead neighbors are marked as NULLs and deleted later
+                for (int j = 0; j < nodes[i]->virtual_neighbors_right.size(); j++)
+                    if (nodes[i]->virtual_neighbors_right[j])
+                        for (int k = 0; k < nodes[i]->virtual_neighbors_right[j]->virtual_neighbors_left.size(); k++)
+                            if (nodes[i]->virtual_neighbors_right[j]->virtual_neighbors_left[k] == nodes[i])
+                                nodes[i]->virtual_neighbors_right[j]->virtual_neighbors_left[k] = NULL;
+
+                nodes[i]->virtual_neighbors_left.clear();
+                nodes[i]->virtual_neighbors_right.clear();
+                for (int s = 0; s < SENSORS; s++)
+                    for (int j = 0; j < sensors[s].getWriting().size(); j++)
+                        if (sensors[s].getWriting()[j].getNode() == nodes[i]){
+                            sensors[s].clearWriting();}
+                delete nodes[i];
+                nodes[i] = NULL;
+            }
+        }
+
+        bool cleared = false;
+        while (!cleared) {
+            while (!nodes[n_nodes - 1] && n_nodes) n_nodes--;
+            cleared = true;
+            for (int i = 0; i < n_nodes; i++) {
+                if (!nodes[i]) {
+                    nodes[i] = nodes[--n_nodes];
+                    cleared = false;
+                    break;
+                }
+            }
+        }
+
+        for (int i = 0; i < n_nodes; i++)       // fancy clearing of neighbors' vecros
+        {
+            bool nulls_exist = true;
+
+            while (nulls_exist) {
+                nulls_exist = false;
+                for (int j = 0; j < nodes[i]->virtual_neighbors_left.size() && !nulls_exist; j++)
+                    if (!nodes[i]->virtual_neighbors_left[j]) {
+                        nodes[i]->virtual_neighbors_left.erase(nodes[i]->virtual_neighbors_left.begin() + j);
+                        nulls_exist = true;
+                    }
+            }
+
+            nulls_exist = true;
+            while (nulls_exist) {
+                nulls_exist = false;
+                for (int j = 0; j < nodes[i]->virtual_neighbors_right.size() && !nulls_exist; j++)
+                    if (!nodes[i]->virtual_neighbors_right[j]) {
+                        nodes[i]->virtual_neighbors_right.erase(nodes[i]->virtual_neighbors_right.begin() + j);
+                        nulls_exist = true;
+                    }
+            }
+        }
+    }
+};
+
