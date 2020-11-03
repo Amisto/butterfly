@@ -571,6 +571,7 @@ void calc_a_step() {
     {
         // killing rampage
         for (int i = 0; i < n_nodes; i++)
+            //Marking(nodes[i]); //instead
             if (nodes[i]->intensity < VISIBILITY_THRESHOLD
                 || outside(nodes[i])
                 || (!nodes[i]->left && !nodes[i]->right && !(nodes[i]->neighbors_left.size()) &&
@@ -579,6 +580,7 @@ void calc_a_step() {
                 nodes[i]->kill_marked = 1;
 
         for (int i = 0; i < n_nodes; i++) {
+            //checkInvalid(); //instead
             if (nodes[i]->kill_marked) {
                 if (nodes[i]->left) nodes[i]->left->right = NULL;
                 if (nodes[i]->right) nodes[i]->right->left = NULL;

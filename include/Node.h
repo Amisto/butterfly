@@ -79,8 +79,11 @@ class Node {
 	void update(double timeStep, double c_rel);
 	Node getReflected(const Obstacle obstacle);
 	Node getRefracted(const Obstacle obstacle);
-	void checkInvalid(int n_nodes, Node *nodes[300000], std::vector<Node *> neighbors_left, 
+	void checkInvalid(int n_nodes, Node node, std::vector<Node *> neighbors_left, 
 std::vector<Node *> neighbors_right, Sensor sensors[SENSORS]);
+    void Node::KillLeft(Node *nodes[300000]){};
+	void Node::KillRight(Node *nodes[300000]){};
+	void Node::Marking(Node node);
 
 };
 
