@@ -197,42 +197,54 @@ void Node::restoreWavefront(Node &reflected, Node &refracted) {
 }
 
 void Node::killLeft() {
-	for (int j = 0; j < this->virtual_neighbors_left.size(); j++)
-		if (this->virtual_neighbors_left[j])
-			for (int k = 0; k < this->virtual_neighbors_left[j]->virtual_neighbors_right.size(); k++)
-				if (this->virtual_neighbors_left[j]->virtual_neighbors_right[k] == this)
-					this->virtual_neighbors_left[j]->virtual_neighbors_right[k] = NULL;
+	for (int j = 0; j < virtual_neighbors_left.size(); j++) {
+		if (virtual_neighbors_left[j]) {
+			for (int k = 0; k < virtual_neighbors_left[j]->virtual_neighbors_right.size(); k++) {
+				if (virtual_neighbors_left[j]->virtual_neighbors_right[k] == this) {
+					virtual_neighbors_left[j]->virtual_neighbors_right[k] = NULL;
+				}
+			}
+		}
+	}
 };
 void Node::killRight() {
-	for (int j = 0; j < this->virtual_neighbors_right.size(); j++)
-		if (this->virtual_neighbors_right[j])
-			for (int k = 0; k < this->virtual_neighbors_right[j]->virtual_neighbors_left.size(); k++)
-				if (this->virtual_neighbors_right[j]->virtual_neighbors_left[k] == this)
-					this->virtual_neighbors_right[j]->virtual_neighbors_left[k] = NULL;
+	for (int j = 0; j < virtual_neighbors_right.size(); j++) {
+		if (virtual_neighbors_right[j]) {
+			for (int k = 0; k < virtual_neighbors_right[j]->virtual_neighbors_left.size(); k++) {
+				if (virtual_neighbors_right[j]->virtual_neighbors_left[k] == this) {
+					virtual_neighbors_right[j]->virtual_neighbors_left[k] = NULL;
+				}
+			}
+		}
+	}
 };
 
 void Node::marking() {
-	if (intensity < VISIBILITY_THRESHOLD
-		|| isOutside(this)
-		|| (!this->left && !this->right && !(this->virtual_neighbors_left.size()) &&
-			!(this->virtual_neighbors_right.size()))
-		)
-		this->kill_marked = 1;
+	if (intensity < VISIBILITY_THRESHOLD || isOutside(this)
+		|| (!left && !right && !(virtual_neighbors_left.size()) && !(virtual_neighbors_right.size()))) {
+		kill_marked = 1;
+	}
 };
 
 void Node::checkInvalid(Sensor sensors[SENSORS]) {
-	if (this->kill_marked) {
-		if (this->left) this->left->right = NULL;
-		if (this->right) this->right->left = NULL;
+	if (kill_marked) {
+		if (left) {
+			left->right = NULL;
+		}
+		if (right) {
+			right->left = NULL;
+		}
 		killLeft();
 		killRight();
-		this->virtual_neighbors_left.clear();
-		this->virtual_neighbors_right.clear();
-		for (int s = 0; s < SENSORS; s++)
-			for (int j = 0; j < sensors[s].getWriting().size(); j++)
+		virtual_neighbors_left.clear();
+		virtual_neighbors_right.clear();
+		for (int s = 0; s < SENSORS; s++) {
+			for (int j = 0; j < sensors[s].getWriting().size(); j++) {
 				if (sensors[s].getWriting()[j].getNode() == this) {
 					sensors[s].clearWriting();
 				}
+			}
+		}
 		delete this;
 	}
 
@@ -242,19 +254,21 @@ void Node::clearNeighbours() {
 	bool nulls_exist = true;
 	while (nulls_exist) {
 		nulls_exist = false;
-		for (int j = 0; j < this->virtual_neighbors_left.size() && !nulls_exist; j++)
-			if (!this->virtual_neighbors_left[j]) {
-				this->virtual_neighbors_left.erase(this->virtual_neighbors_left.begin() + j);
+		for (int j = 0; j < virtual_neighbors_left.size() && !nulls_exist; j++) {
+			if (!virtual_neighbors_left[j]) {
+				virtual_neighbors_left.erase(virtual_neighbors_left.begin() + j);
 				nulls_exist = true;
 			}
+		}
 		nulls_exist = true;
 		while (nulls_exist) {
 			nulls_exist = false;
-			for (int j = 0; j < this->virtual_neighbors_right.size() && !nulls_exist; j++)
-				if (!this->virtual_neighbors_right[j]) {
-					this->virtual_neighbors_right.erase(this->virtual_neighbors_right.begin() + j);
+			for (int j = 0; j < virtual_neighbors_right.size() && !nulls_exist; j++) {
+				if (!virtual_neighbors_right[j]) {
+					virtual_neighbors_right.erase(virtual_neighbors_right.begin() + j);
 					nulls_exist = true;
 				}
+			}
 		}
 	}
-
+}
