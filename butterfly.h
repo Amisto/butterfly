@@ -80,7 +80,7 @@ struct Node         // a ray
     vector<Node *> neighbors_left, neighbors_right;
     // additional, "virtual", "ghost" neighbors - they are used to track reflected/refracted wavefronts
 
-    int marked_for_the_kill;
+    int kill_marked;
 } *nodes[300000] = {NULL};
 int n_nodes;
 
@@ -283,7 +283,7 @@ void refine() {
                     connect(node, r);
                     connect(l, node);
                     l->t_encounter = INFINITY;
-                    node->marked_for_the_kill = 0;
+                    node->kill_marked = 0;
                     node->material = l->material;
                     node->neighbors_left.clear();
                     node->neighbors_right.clear();
@@ -379,7 +379,7 @@ void calc_a_step() {
                 }
                 if (!encountered) {
                     nodes[n]->t_encounter = -1;
-                    //nodes[n]->marked_for_the_kill = 1;
+                    //nodes[n]->kill_marked = 1;
                 }
             }
         }
@@ -426,7 +426,7 @@ void calc_a_step() {
                                                                                                           obstacles[nodes[i]->obstacle_number].c_rel,
                                   &vel_1, &i_0, &i_1);
                     if (i_0 == -1) {
-                        nodes[i]->marked_for_the_kill = 1;
+                        nodes[i]->kill_marked = 1;
                     } else {
                         Node *reflected = new Node;
                         Node *refracted = new Node;
@@ -449,8 +449,8 @@ void calc_a_step() {
                         reflected->t_encounter = INFINITY;                  // INFINITY => marked for collision processing on the next time step
                         refracted->t_encounter = INFINITY;
 
-                        refracted->marked_for_the_kill = reflected->marked_for_the_kill = 0;
-                        nodes[i]->marked_for_the_kill = 1;           // original node is marked for the kill on the next step
+                        refracted->kill_marked = reflected->kill_marked = 0;
+                        nodes[i]->kill_marked = 1;           // original node is marked for the kill on the next step
 
                         //== managing neighbors - the cornerstone of the algorithm
 
@@ -541,7 +541,7 @@ void calc_a_step() {
                         }
                         nodes[n_nodes++] = n;
                         n->intensity = nodes[i]->intensity * dots[nodes[i]->vertice_number].brightness;
-                        n->marked_for_the_kill = 0;
+                        n->kill_marked = 0;
                         n->material = nodes[i]->material;
                         n->neighbors_left.clear();
                         n->neighbors_right.clear();
@@ -575,10 +575,10 @@ void calc_a_step() {
                 || (!nodes[i]->left && !nodes[i]->right && !(nodes[i]->neighbors_left.size()) &&
                     !(nodes[i]->neighbors_right.size()))
                     )// || nodes[i]->t_encounter < -0.5)
-                nodes[i]->marked_for_the_kill = 1;
+                nodes[i]->kill_marked = 1;
 
         for (int i = 0; i < n_nodes; i++) {
-            if (nodes[i]->marked_for_the_kill) {
+            if (nodes[i]->kill_marked) {
                 if (nodes[i]->left) nodes[i]->left->right = NULL;
                 if (nodes[i]->right) nodes[i]->right->left = NULL;
                 for (int j = 0; j < nodes[i]->neighbors_left.size(); j++)
@@ -678,7 +678,7 @@ void init_explosion(double _x, double _y) {
         temp->right = temp->left = NULL;
         nodes[n_nodes++] = temp;
         temp->intensity = 1.0;
-        temp->marked_for_the_kill = 0;
+        temp->kill_marked = 0;
 
         double angle = 0;
         angle = 2 * M_PI * i / (double) n;

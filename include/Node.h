@@ -26,7 +26,7 @@ class Node {
 	std::vector<Node *> virtual_neighbors_left,
 		virtual_neighbors_right;  // additional, "virtual", "ghost" neighbors - they are used to track reflected/refracted wavefronts
 
-	int marked_for_the_kill;
+	int kill_marked;
 
  public:
 	Node(const Vector2 &pos,
@@ -38,7 +38,7 @@ class Node {
 		 int vertice_number=0,
 		 Node *left=NULL,
 		 Node *right=NULL,
-		 int marked_for_the_kill=0,
+		 int kill_marked=0,
 		 const std::vector<Node *> &virtual_neighbors_left=std::vector<Node *>(),
 		 const std::vector<Node *> &virtual_neighbors_right=std::vector<Node *>());
 
@@ -55,7 +55,7 @@ class Node {
 	void addLeftVirtualNeighbor(Node *neighbor);
 	void setVirtualRight(const std::vector<Node *> &virtual_neighbors_right);
 	void addRightVirtualNeighbor(Node *neighbor);
-	void setMarkedForTheKill(int marked_for_the_kill);
+	void setMarkedForTheKill(int kill_marked);
 
 	void restoreWavefront(Node &reflected, Node &refracted);
 	void virtualHandler(Node &ray, bool isRightNeighbor);

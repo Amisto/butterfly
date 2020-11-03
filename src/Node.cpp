@@ -7,9 +7,9 @@ Node::Node(const Vector2 &pos,
 		   double t_encounter,
 		   int obstacle_number,
 		   int vertice_number,
-		   Node *left,
+		   Node *left, 
 		   Node *right,
-		   int marked_for_the_kill,
+		   int kill_marked,
 		   const std::vector<Node *> &virtual_neighbors_left,
 		   const std::vector<Node *> &virtual_neighbors_right) {
 
@@ -60,7 +60,7 @@ const std::vector<Node *> Node::getVirtualRight() const {
 }
 
 int Node::getMarkedForTheKill() const {
-	return marked_for_the_kill;
+	return kill_marked;
 }
 
 void Node::setPos(const Vector2 &pos) {
@@ -106,8 +106,8 @@ void Node::setVirtualRight(const std::vector<Node *> &virtual_neighbors_right) {
 	this->virtual_neighbors_right = virtual_neighbors_right;
 }
 
-void Node::setMarkedForTheKill(int marked_for_the_kill) {
-	this->marked_for_the_kill = marked_for_the_kill;
+void Node::setMarkedForTheKill(int kill_marked) {
+	this->kill_marked = kill_marked;
 }
 
 const Vector2 Node::getPosAfterStep(double step) const {
