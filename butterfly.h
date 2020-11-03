@@ -571,7 +571,7 @@ void calc_a_step() {
     {
         // killing rampage
         for (int i = 0; i < n_nodes; i++)
-            //Marking(nodes[i]); //instead
+            //nodes[i].marking(); //instead
             if (nodes[i]->intensity < VISIBILITY_THRESHOLD
                 || outside(nodes[i])
                 || (!nodes[i]->left && !nodes[i]->right && !(nodes[i]->neighbors_left.size()) &&
@@ -580,10 +580,13 @@ void calc_a_step() {
                 nodes[i]->kill_marked = 1;
 
         for (int i = 0; i < n_nodes; i++) {
-            //checkInvalid(); //instead
+            //nodes[i].checkInvalid(); //instead
             if (nodes[i]->kill_marked) {
                 if (nodes[i]->left) nodes[i]->left->right = NULL;
                 if (nodes[i]->right) nodes[i]->right->left = NULL;
+                // nodes[i].killRught();
+                // nodes[i].killLeft();
+                //instead
                 for (int j = 0; j < nodes[i]->neighbors_left.size(); j++)
                     if (nodes[i]->neighbors_left[j])
                         for (int k = 0; k < nodes[i]->neighbors_left[j]->neighbors_right.size(); k++)
@@ -604,7 +607,7 @@ void calc_a_step() {
                 nodes[i] = NULL;
             }
         }
-
+    //stayed here
         bool cleared = false;
         while (!cleared) {
             while (!nodes[n_nodes - 1] && n_nodes) n_nodes--;
