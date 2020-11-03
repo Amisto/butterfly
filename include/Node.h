@@ -80,9 +80,10 @@ class Node {
 	Node getReflected(const Obstacle obstacle);
 	Node getRefracted(const Obstacle obstacle);
 	void checkInvalid(Sensor sensors[SENSORS]);
-    void killLeft(){};
-	void killRight(){};
+    void killLeft();
+	void killRight();
 	void marking();
+	void clearNeighbours();
 
 };
 

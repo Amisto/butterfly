@@ -623,6 +623,7 @@ void calc_a_step() {
 
         for (int i = 0; i < n_nodes; i++)       // fancy clearing of neighbors' vecros
         {
+            //nodes[i].clearNeighbours() instead
             bool nulls_exist = true;
 
             while (nulls_exist) {
@@ -642,6 +643,7 @@ void calc_a_step() {
                         nodes[i]->neighbors_right.erase(nodes[i]->neighbors_right.begin() + j);
                         nulls_exist = true;
                     }
+            //out there
             }
         }
     }

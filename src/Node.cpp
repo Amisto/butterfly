@@ -221,7 +221,8 @@ void Node::marking()
                 this->kill_marked = 1;
 };
 
-void Node::checkInvalid(Sensor sensors[SENSORS]){
+void Node::checkInvalid(Sensor sensors[SENSORS])
+{
     if (this->kill_marked) {
         if (this->left) this->left->right = NULL;
         if (this->right) this->right->left = NULL;
@@ -236,6 +237,26 @@ void Node::checkInvalid(Sensor sensors[SENSORS]){
         delete this;
         }
 
-    }
 };
+
+void Node::clearNeighbours()
+{
+    bool nulls_exist = true;
+	while (nulls_exist) {
+            nulls_exist = false;
+            for (int j = 0; j < this->virtual_neighbors_left.size() && !nulls_exist; j++)
+                if (!this->virtual_neighbors_left[j]) {
+                    this->virtual_neighbors_left.erase(this->virtual_neighbors_left.begin() + j);
+                    nulls_exist = true;
+                    }
+	nulls_exist = true;
+            while (nulls_exist) {
+                nulls_exist = false;
+                for (int j = 0; j < this->virtual_neighbors_right.size() && !nulls_exist; j++)
+                    if (!this->virtual_neighbors_right[j]) {
+                        this->virtual_neighbors_right.erase(this->virtual_neighbors_right.begin() + j);
+                        nulls_exist = true;
+                    }
+            }
+}
 
