@@ -58,6 +58,7 @@ void Solver::propagate() {
 		sensors[i].setPos(Vector2(x, y));
 		sensors[i].clearWriting();    //probably redundant, writing already empty
 		initExplosion(Vector2(x, y));
+		step();
 	}
 }
 
@@ -218,7 +219,7 @@ void Solver::fixNodes() {
 	for (int node = 0; node < nodesNum; node++) {
 		nodes[node]->checkInvalid();
 
-		if (!nodes[node]) {
+		if (nodes[node]->getMarkedForTheKill()) {
 			for (int s = 0; s < SENSORS; s++) {
 				for (int j = 0; j < sensors[s].getWriting().size(); j++) {
 					if (sensors[s].getWriting()[j].getNode() == nodes[node]) {
@@ -226,6 +227,7 @@ void Solver::fixNodes() {
 					}
 				}
 			}
+			nodes[node] = NULL;
 		}
 	}
 
@@ -245,7 +247,9 @@ void Solver::fixNodes() {
 	}
 
 	for (int node = 0; node < nodesNum; node++) {
-		nodes[node]->clearNeighbours();
+		if (nodes[node]) {
+			nodes[node]->clearNeighbours();
+		}
 	}
 }
 

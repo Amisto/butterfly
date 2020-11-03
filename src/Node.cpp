@@ -2,7 +2,6 @@
 #define VISIBILITY_THRESHOLD    0.08 //defining constant necessary in 1 method
 #define SENSORS                 32 //number of sensors
 
-
 Node::Node(const Vector2 &pos,
 		   const Vector2 &velocity,
 		   int material,
@@ -236,29 +235,30 @@ void Node::checkInvalid() {
 		killRight();
 		virtual_neighbors_left.clear();
 		virtual_neighbors_right.clear();
-		delete this;
 	}
 
 }
 
 void Node::clearNeighbours() {
 	bool nulls_exist = true;
-	while (nulls_exist) {
-		nulls_exist = false;
-		for (int j = 0; j < virtual_neighbors_left.size() && !nulls_exist; j++) {
-			if (!virtual_neighbors_left[j]) {
-				virtual_neighbors_left.erase(virtual_neighbors_left.begin() + j);
-				nulls_exist = true;
-			}
-		}
-		nulls_exist = true;
+	if (!virtual_neighbors_left.size()) {
 		while (nulls_exist) {
 			nulls_exist = false;
-			for (int j = 0; j < virtual_neighbors_right.size() && !nulls_exist; j++) {
-				if (!virtual_neighbors_right[j]) {
-					virtual_neighbors_right.erase(virtual_neighbors_right.begin() + j);
+			for (int j = 0; j < virtual_neighbors_left.size() && !nulls_exist; j++) {
+				if (!virtual_neighbors_left[j]) {
+					virtual_neighbors_left.erase(virtual_neighbors_left.begin() + j);
 					nulls_exist = true;
 				}
+			}
+		}
+	}
+	nulls_exist = true;
+	while (nulls_exist) {
+		nulls_exist = false;
+		for (int j = 0; j < virtual_neighbors_right.size() && !nulls_exist; j++) {
+			if (!virtual_neighbors_right[j]) {
+				virtual_neighbors_right.erase(virtual_neighbors_right.begin() + j);
+				nulls_exist = true;
 			}
 		}
 	}
