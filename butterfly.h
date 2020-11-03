@@ -207,6 +207,7 @@ double signal(double t, double fc) {
 
 void write_to_csv() {
     for (int i = 0; i < SENSORS; i++) {
+        //instead sensors[i].writeToCSV();
         double _signal = 0;
         for (int j = 0; j < sensors[i].writing.size(); j++) {
             if (sensors[i].writing[j].time > 0)
