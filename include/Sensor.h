@@ -3,7 +3,6 @@
 
 #include "Vector2.h"
 #include "Writing.h"
-#include <vector>
 
 class Sensor {
  private:

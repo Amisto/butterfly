@@ -1,11 +1,7 @@
 #include "../include/Obstacle.h"
 
-Obstacle::Obstacle() : c_rel{0} {
-	this->pos[VERTICES] = {Vector2()};
-}
-
 Vector2 Obstacle::getPos(int i) const {
-	return pos[i];
+	return pos.at(i);
 }
 
 double Obstacle::getCRel() const {
@@ -15,6 +11,11 @@ double Obstacle::getCRel() const {
 void Obstacle::setPos(int j, Vector2 pos) {
 	this->pos[j] = pos;
 }
+
 void Obstacle::setCRel(double c_rel) {
 	this->c_rel = c_rel;
+}
+
+void Obstacle::addPos(Vector2 pos) {
+	this->pos.push_back(pos);
 }

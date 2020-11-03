@@ -2,7 +2,6 @@
 #define SOLVER_NODE_H
 
 #include "Vector2.h"
-#include <vector>
 #include <cmath>
 #include <Obstacle.h>
 #include "Constants.h"

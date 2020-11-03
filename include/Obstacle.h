@@ -6,15 +6,14 @@
 
 class Obstacle {
  private:
-	Vector2 pos[VERTICES];
+	std::vector<Vector2> pos;
 	double c_rel;
 
  public:
-	Obstacle();
-
 	Vector2 getPos(int i) const;
 	double getCRel() const;
 
+	void addPos(Vector2 pos);
 	void setPos(int j, Vector2 pos);
 	void setCRel(double c_rel);
 };

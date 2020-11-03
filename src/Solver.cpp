@@ -21,16 +21,19 @@ void Solver::initObstacles() {
 	file >> OBSTACLES;
 
 	for (int i = 0; i < OBSTACLES; i++) {
+		Obstacle obstacle;
 		for (int j = 0; j < VERTICES; j++) {
 			int x, y;
 			file >> x >> y;
-			obstacles[i].setPos(j, Vector2(x, y));
+			Vector2 myVec(x, y);
+			obstacle.addPos(myVec);
 		}
 		double c_rel;
 		file >> c_rel;
-		obstacles[i].setCRel(c_rel);
+		obstacle.setCRel(c_rel);
 
-		obstacles[i].setPos(VERTICES, obstacles[i].getPos(0));
+		obstacle.addPos(obstacle.getPos(0));
+		obstacles.push_back(obstacle);
 	}
 }
 
@@ -39,12 +42,14 @@ void Solver::initDots() {
 	file >> DOTS;
 
 	for (int i = 0; i < DOTS; i++) {
+		Dot dot;
 		int x, y;
 		double brightness;
 		file >> x >> y >> brightness;
 
-		dots[i].setPos(Vector2(x, y));
-		dots[i].setBrightness(brightness);
+		dot.setPos(Vector2(x, y));
+		dot.setBrightness(brightness);
+		dots.push_back(dot);
 	}
 
 	file.close();
@@ -54,10 +59,12 @@ void Solver::propagate() {
 	for (int i = 0; i < SENSORS; i++) {
 		double x = X / 2 - DX_SENSORS * (SENSORS / 2 - i);
 		double y = Y * 0.999;
-
-		sensors[i].setPos(Vector2(x, y));
-		sensors[i].clearWriting();    //probably redundant, writing already empty
-		initExplosion(Vector2(x, y));
+		Sensor sensor;
+		sensor.setPos(Vector2(x, y));
+		sensors.push_back(sensor);
+	}
+	for (int i = 0; i < sensors.size(); i++) {
+		initExplosion(sensors[i].getPos());
 		step();
 	}
 }
@@ -160,7 +167,7 @@ int Solver::checkDots(int node) {
 			}
 		}
 	}
-	for (int i = 0; i < SENSORS; i++) {
+	for (int i = 0; i < sensors.size(); i++) {
 		if (isPointInRect(sensors[i].getPos(), nodePos, rightNodePos, nodeNextPos, rightNodeNextPos)) {
 			double dist = distanceToSegment(nodes[node]->getPos(), nodes[node]->getRight()->getPos(),
 											sensors[i].getPos());
@@ -220,7 +227,7 @@ void Solver::fixNodes() {
 		nodes[node]->checkInvalid();
 
 		if (nodes[node]->getMarkedForTheKill()) {
-			for (int s = 0; s < SENSORS; s++) {
+			for (int s = 0; s < sensors.size(); s++) {
 				for (int j = 0; j < sensors[s].getWriting().size(); j++) {
 					if (sensors[s].getWriting()[j].getNode() == nodes[node]) {
 						sensors[s].clearWriting();

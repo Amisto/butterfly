@@ -8,9 +8,9 @@
 
 class Solver {
  private:
-	Obstacle obstacles[OBSTACLES_TOTAL];
-	Dot dots[DOTS_TOTAL];
-	Sensor sensors[SENSORS];
+	std::vector<Obstacle> obstacles;
+	std::vector<Dot> dots;
+	std::vector<Sensor> sensors;
 	Node *nodes[300000];
 
 	int OBSTACLES = 0;

@@ -1,6 +1,8 @@
 #ifndef SOLVER_VECTOR2_H
 #define SOLVER_VECTOR2_H
 
+#include <vector>
+
 class Vector2 {
  private:
 	double x, y;
