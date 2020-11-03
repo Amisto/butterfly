@@ -76,8 +76,7 @@ void Solver::initExplosion(Vector2 pos) {
 	for (int i = 0; i < n; i++) {
 		double angle = 2.0 * M_PI * i / (double) n;
 		Vector2 velocity(cos(angle), sin(angle));
-		Node *temp = new Node(pos, velocity);
-		nodes[nodesNum++] = temp;
+		nodes[nodesNum++] = new Node(pos, velocity);
 	}
 
 	for (int i = 1; i < n - 1; i++) {
@@ -227,13 +226,14 @@ void Solver::fixNodes() {
 		nodes[node]->checkInvalid();
 
 		if (nodes[node]->getMarkedForTheKill()) {
-			for (auto & sensor : sensors) {
+			for (auto &sensor : sensors) {
 				for (int j = 0; j < sensor.getWriting().size(); j++) {
 					if (sensor.getWriting()[j].getNode() == nodes[node]) {
 						sensor.clearWriting();
 					}
 				}
 			}
+			delete nodes[node];
 			nodes[node] = NULL;
 		}
 	}
@@ -256,6 +256,13 @@ void Solver::fixNodes() {
 	for (int node = 0; node < nodesNum; node++) {
 		if (nodes[node]) {
 			nodes[node]->clearNeighbours();
+		}
+	}
+}
+Solver::~Solver() {
+	for (int i = 0; i < nodesNum; i++) {
+		if (nodes[i] != NULL) {
+			delete nodes[i];
 		}
 	}
 }

@@ -11,7 +11,7 @@ class Solver {
 	std::vector<Obstacle> obstacles;
 	std::vector<Dot> dots;
 	std::vector<Sensor> sensors;
-	Node *nodes[300000]{};
+	Node *nodes[300000] = {NULL};
 
 	int OBSTACLES = 0;
 	int DOTS = 0;
@@ -33,6 +33,8 @@ class Solver {
 	void initExplosion(Vector2 pos);
 	void step();
 	void fixNodes();
+
+	~Solver();
 };
 
 #endif //SOLVER_SRC_SYSTEM_H_

@@ -199,6 +199,7 @@ void Node::killLeft() {
 		if (virtual_neighbors_left[j]) {
 			for (int k = 0; k < virtual_neighbors_left[j]->virtual_neighbors_right.size(); k++) {
 				if (virtual_neighbors_left[j]->virtual_neighbors_right[k] == this) {
+					delete virtual_neighbors_left[j]->virtual_neighbors_right[k];
 					virtual_neighbors_left[j]->virtual_neighbors_right[k] = NULL;
 				}
 			}
@@ -211,6 +212,7 @@ void Node::killRight() {
 		if (virtual_neighbors_right[j]) {
 			for (int k = 0; k < virtual_neighbors_right[j]->virtual_neighbors_left.size(); k++) {
 				if (virtual_neighbors_right[j]->virtual_neighbors_left[k] == this) {
+					delete virtual_neighbors_right[j]->virtual_neighbors_left[k];
 					virtual_neighbors_right[j]->virtual_neighbors_left[k] = NULL;
 				}
 			}
