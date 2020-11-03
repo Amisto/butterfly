@@ -241,14 +241,12 @@ void Node::checkInvalid() {
 
 void Node::clearNeighbours() {
 	bool nulls_exist = true;
-	if (!virtual_neighbors_left.size()) {
-		while (nulls_exist) {
-			nulls_exist = false;
-			for (int j = 0; j < virtual_neighbors_left.size() && !nulls_exist; j++) {
-				if (!virtual_neighbors_left[j]) {
-					virtual_neighbors_left.erase(virtual_neighbors_left.begin() + j);
-					nulls_exist = true;
-				}
+	while (nulls_exist) {
+		nulls_exist = false;
+		for (int j = 0; j < virtual_neighbors_left.size() && !nulls_exist; j++) {
+			if (!virtual_neighbors_left[j]) {
+				virtual_neighbors_left.erase(virtual_neighbors_left.begin() + j);
+				nulls_exist = true;
 			}
 		}
 	}

@@ -63,8 +63,8 @@ void Solver::propagate() {
 		sensor.setPos(Vector2(x, y));
 		sensors.push_back(sensor);
 	}
-	for (int i = 0; i < sensors.size(); i++) {
-		initExplosion(sensors[i].getPos());
+	for (auto &sensor : sensors) {
+		initExplosion(sensor.getPos());
 		step();
 	}
 }
@@ -167,19 +167,19 @@ int Solver::checkDots(int node) {
 			}
 		}
 	}
-	for (int i = 0; i < sensors.size(); i++) {
-		if (isPointInRect(sensors[i].getPos(), nodePos, rightNodePos, nodeNextPos, rightNodeNextPos)) {
+	for (auto &sensor : sensors) {
+		if (isPointInRect(sensor.getPos(), nodePos, rightNodePos, nodeNextPos, rightNodeNextPos)) {
 			double dist = distanceToSegment(nodes[node]->getPos(), nodes[node]->getRight()->getPos(),
-											sensors[i].getPos());
+											sensor.getPos());
 
 			time = nodes[node]->getTime(dist, obstacles[nodes[node]->getMaterial()].getCRel());
 
-			std::vector<Writing> writing = sensors[i].getWriting();
+			std::vector<Writing> writing = sensor.getWriting();
 			if (time < nodes[node]->getTEncounter()) {
 				writing.push_back(Writing(-time, nodes[node]->getIntensity(),
 										  1.0 / nodes[node]->getVelocity().getY()));
 			}
-			sensors[i].setWriting(writing);
+			sensor.setWriting(writing);
 		}
 	}
 
@@ -227,10 +227,10 @@ void Solver::fixNodes() {
 		nodes[node]->checkInvalid();
 
 		if (nodes[node]->getMarkedForTheKill()) {
-			for (int s = 0; s < sensors.size(); s++) {
-				for (int j = 0; j < sensors[s].getWriting().size(); j++) {
-					if (sensors[s].getWriting()[j].getNode() == nodes[node]) {
-						sensors[s].clearWriting();
+			for (auto & sensor : sensors) {
+				for (int j = 0; j < sensor.getWriting().size(); j++) {
+					if (sensor.getWriting()[j].getNode() == nodes[node]) {
+						sensor.clearWriting();
 					}
 				}
 			}

@@ -11,7 +11,7 @@ class Solver {
 	std::vector<Obstacle> obstacles;
 	std::vector<Dot> dots;
 	std::vector<Sensor> sensors;
-	Node *nodes[300000];
+	Node *nodes[300000]{};
 
 	int OBSTACLES = 0;
 	int DOTS = 0;
