@@ -2,7 +2,6 @@
 #define VISIBILITY_THRESHOLD    0.08 //defining constant necessary in 1 method
 #define SENSORS                 32 //number of sensors
 
-void Kill()
 
 Node::Node(const Vector2 &pos,
 		   const Vector2 &velocity,
@@ -206,7 +205,8 @@ void Node::killLeft() {
 			}
 		}
 	}
-};
+}
+
 void Node::killRight() {
 	for (int j = 0; j < virtual_neighbors_right.size(); j++) {
 		if (virtual_neighbors_right[j]) {
@@ -217,16 +217,14 @@ void Node::killRight() {
 			}
 		}
 	}
-};
+}
 
-void Node::marking() {
+void Node::checkInvalid(Sensor sensors[SENSORS]) {
 	if (intensity < VISIBILITY_THRESHOLD || isOutside(this)
 		|| (!left && !right && !(virtual_neighbors_left.size()) && !(virtual_neighbors_right.size()))) {
 		kill_marked = 1;
 	}
-};
 
-void Node::checkInvalid(Sensor sensors[SENSORS]) {
 	if (kill_marked) {
 		if (left) {
 			left->right = NULL;
@@ -248,7 +246,7 @@ void Node::checkInvalid(Sensor sensors[SENSORS]) {
 		delete this;
 	}
 
-};
+}
 
 void Node::clearNeighbours() {
 	bool nulls_exist = true;

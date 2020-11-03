@@ -104,7 +104,10 @@ void Solver::step() {
 	for (int node = 0; node < nodesNum; node++) {
 		nodes[node]->update(timeStep, obstacles[nodes[node]->getMaterial()].getCRel());
 	}
-
+	handleReflection();
+	for (int node = 0; node < nodesNum; node++) {
+		nodes[node]->checkInvalid(sensors);
+	}
 }
 
 int Solver::checkObstacles(int node) {

@@ -81,7 +81,6 @@ class Node {
 	void checkInvalid(Sensor sensors[SENSORS]);
 	void killLeft();
 	void killRight();
-	void marking();
 	void clearNeighbours();
 
 };
