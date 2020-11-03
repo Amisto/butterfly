@@ -205,7 +205,7 @@ double signal(double t, double fc) {
     return sin(M_PI * t / DT_WIDTH) * sin(M_PI * t / DT_WIDTH) * sin(2 * M_PI * t / DT_CARRYING * fc);
 }
 
-void write_to_csv() {
+void write_to_csv() { //old
     for (int i = 0; i < SENSORS; i++) {
         //instead sensors[i].writeToCSV();
         double _signal = 0;
@@ -229,6 +229,15 @@ void write_to_csv() {
         }
     }
 
+    fprintf(f_csv, "\n");
+    written++;
+}
+void WholeWriteToCSV() { //new
+    for (int i = 0; i < SENSORS; i++)
+    {
+        sensors[i].writeToCSV();
+    }
+    
     fprintf(f_csv, "\n");
     written++;
 }
