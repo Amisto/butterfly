@@ -80,6 +80,7 @@ class Node {
 	void killLeft();
 	void killRight();
 	void clearNeighbours();
+	void deteriorate();
 
 };
 

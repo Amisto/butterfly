@@ -22,6 +22,7 @@ class Writing {
 	void setBrightness(double brightness);
 	void setFrequencyCorrection(double frequency_correction);
 	void setNode(Node *node);
+	void deteriorate();
 };
 
 #endif //SOLVER_SRC_WRITING_H_

@@ -20,9 +20,16 @@ class Solver {
 	double focus = 0;
 	double PIES = 0;
 
+	double deteriorationTime = 0;
+	double totalTime = 0;
+	double startTime = 0;
+	double finishTime = 0;
+
 	int checkObstacles(int node);
 	int checkDots(int node);
 	void handleReflection();
+	void deteriorate();
+	void resetTime();
 
  public:
 	Solver();

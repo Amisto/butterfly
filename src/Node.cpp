@@ -263,3 +263,7 @@ void Node::clearNeighbours() {
 		}
 	}
 }
+
+void Node::deteriorate() {
+	intensity *= DETERIORATION;
+}

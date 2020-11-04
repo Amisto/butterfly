@@ -65,7 +65,10 @@ void Solver::propagate() {
 	}
 	for (auto &sensor : sensors) {
 		initExplosion(sensor.getPos());
-		step();
+		resetTime();
+		while (finishTime > 0) {
+			step();
+		}
 	}
 }
 
@@ -88,6 +91,10 @@ void Solver::initExplosion(Vector2 pos) {
 	nodes[0]->setLeft(nodes[n - 1]);
 	nodes[n - 1]->setLeft(nodes[n - 2]);
 	nodes[n - 1]->setRight(nodes[0]);
+
+	for (auto &sensor : sensors) {
+		sensor.clearWriting();
+	}
 
 }
 
@@ -115,6 +122,22 @@ void Solver::step() {
 
 	handleReflection();
 	fixNodes();
+
+	deteriorationTime += timeStep;
+	while (deteriorationTime > DT_DETERIORATION) {
+		deteriorate();
+		deteriorationTime -= DT_DETERIORATION;
+	}
+
+	totalTime += timeStep;
+	while (totalTime > DT_DIGITIZATION) {
+		if (startTime < 0) {
+			//write to csv
+		}
+		totalTime -= DT_DIGITIZATION;
+		startTime -= DT_DIGITIZATION;
+		finishTime -= DT_DIGITIZATION;
+	}
 }
 
 int Solver::checkObstacles(int node) {
@@ -267,4 +290,17 @@ Solver::~Solver() {
 	}
 }
 
+void Solver::resetTime() {
+	startTime = SENSORS * DX_SENSORS * 0.1;
+	finishTime = 2.0 * Y;
+}
+
+void Solver::deteriorate() {
+	for (int n = 0; n < nodesNum; n++) {
+		nodes[n]->deteriorate();
+	}
+	for (auto &sensor : sensors) {
+		sensor.deteriorate();
+	}
+}
 

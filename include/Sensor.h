@@ -15,6 +15,7 @@ class Sensor {
 	void setPos(const Vector2 &pos);
 	void setWriting(const std::vector<Writing> &writing);
 	void clearWriting();
+	void deteriorate();
 //	void writeToCSV(FILE *f_csv = NULL);
 
 };

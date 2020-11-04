@@ -34,3 +34,7 @@ void Writing::setFrequencyCorrection(double frequency_correction) {
 void Writing::setNode(Node *node) {
 	this->node = node;
 }
+
+void Writing::deteriorate() {
+	brightness *= DETERIORATION;
+}

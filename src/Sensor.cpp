@@ -25,6 +25,12 @@ void Sensor::clearWriting() {
 	this->writing.clear();
 }
 
+void Sensor::deteriorate() {
+	for(int i = 0; i<writing.size(); i++){
+		writing[i].deteriorate();
+	}
+}
+
 double signal(double t, double fc) {
     return sin(M_PI * t / DT_WIDTH) * sin(M_PI * t / DT_WIDTH) * sin(2 * M_PI * t / DT_CARRYING * fc);
 }//necessary to add this func(
