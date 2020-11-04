@@ -212,7 +212,7 @@ void Solver::handleReflection() {
 	double delta = 0.5;
 	for (int i = 0; i < nodesNum; i++) {
 		if (nodes[i]->getTEncounter() < ZERO && nodes[i]->getTEncounter() > -delta) {
-			if (nodes[i]->getMaterial() >= 0) {
+			if (nodes[i]->getObstacleNumber() >= 0) {
 				Node reflected = nodes[i]->getReflected(obstacles[nodes[i]->getObstacleNumber()]);
 				Node refracted = nodes[i]->getRefracted(obstacles[nodes[i]->getObstacleNumber()]);
 
@@ -240,6 +240,26 @@ void Solver::handleReflection() {
 
 					nodes[i]->restoreWavefront(reflected, refracted);
 				}
+			} else if (nodes[i]->getObstacleNumber() == -1) {    // encountering a dot obstacle
+				double sina = -nodes[i]->getVelocity().getY();
+				double cosa = -nodes[i]->getVelocity().getX();
+				double alpha = cosa > 0 ? asin(sina) : M_PI - asin(sina);
+				double dalpha = M_PI / (POINTS_IN_DOT_WAVEFRONT - 1);
+
+				alpha += M_PI / 2;
+				int oldNodesNum = nodesNum;
+				for (int j = 0; j < POINTS_IN_DOT_WAVEFRONT; j++) {
+					Node *n = new Node(dots[nodes[i]->getVerticeNumber()], alpha);
+					nodes[nodesNum++] = n;
+					alpha -= dalpha;
+				}
+				for (int j = 1; j < POINTS_IN_DOT_WAVEFRONT - 1; j++) {
+					nodes[oldNodesNum + j]->setLeft(nodes[oldNodesNum + j - 1]);
+					nodes[oldNodesNum + j]->setRight(nodes[oldNodesNum + j + 1]);
+				}
+				nodes[oldNodesNum]->setRight(nodes[oldNodesNum + 1]);
+				nodes[nodesNum - 1]->setLeft(nodes[nodesNum - 2]);
+				nodes[i]->setTEncounter(INFINITY);
 			}
 		}
 	}

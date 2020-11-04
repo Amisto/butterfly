@@ -4,7 +4,6 @@
 #include "Obstacle.h"
 #include "Node.h"
 #include "Sensor.h"
-#include "Dot.h"
 
 class Solver {
  private:

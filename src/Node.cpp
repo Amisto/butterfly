@@ -13,7 +13,19 @@ Node::Node(const Vector2 &pos,
 		   Node *right,
 		   int kill_marked,
 		   const std::vector<Node *> &virtual_neighbors_left,
-		   const std::vector<Node *> &virtual_neighbors_right) {
+		   const std::vector<Node *> &virtual_neighbors_right) :
+	pos{pos},
+	velocity{velocity},
+	material{material},
+	intensity{intensity},
+	t_encounter{t_encounter},
+	obstacle_number{obstacle_number},
+	vertice_number{vertice_number},
+	left{left},
+	right{right},
+	kill_marked{kill_marked},
+	virtual_neighbors_left{virtual_neighbors_left},
+	virtual_neighbors_right{virtual_neighbors_right} {
 
 }
 
@@ -266,4 +278,10 @@ void Node::clearNeighbours() {
 
 void Node::deteriorate() {
 	intensity *= DETERIORATION;
+}
+
+Node::Node(const Dot &dot, const double alpha) :
+	Node(Vector2(dot.getPos().getX() + cos(alpha) * 0.01, dot.getPos().getY() + sin(alpha) * 0.01),
+		 Vector2(cos(alpha), sin(alpha)),
+		 intensity * dot.getBrightness()) {
 }
