@@ -8,8 +8,8 @@ def final(file, val, pref):
         w.write(fpng, data_color)
 
 
-dir = 'data/baseline/Sensor{}'
- # function to create final files
+dir = 'data/baseline/Sensor{}'  # function to create final files
+
 import matplotlib.pyplot as plt  # directory for saving
 import argparse
 import os
