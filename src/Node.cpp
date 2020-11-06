@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Node.h"
 #define VISIBILITY_THRESHOLD    0.08 //defining constant necessary in 1 method
 #define SENSORS                 32 //number of sensors
@@ -137,10 +138,10 @@ double Node::getTime(double dist, double c_rel) const {
 }
 
 void Node::update(double timeStep, double c_rel) {
-	pos.setX(velocity.getX() * timeStep * (material >= 0 ? c_rel : 1.0));
-	pos.setY(velocity.getX() * timeStep * (material >= 0 ? c_rel : 1.0));
+	pos.setX(pos.getX() + velocity.getX() * timeStep * (material >= 0 ? c_rel : 1.0));
+	pos.setY(pos.getY() + velocity.getY() * timeStep * (material >= 0 ? c_rel : 1.0));
 
-	if ((t_encounter <= INFINITY) && (t_encounter != -1)) {
+	if ((t_encounter >= -0.5) && (t_encounter != INFINITY)) {
 		t_encounter -= timeStep;
 	}
 }
@@ -233,7 +234,7 @@ void Node::killRight() {
 }
 
 void Node::checkInvalid() {
-	if (intensity < VISIBILITY_THRESHOLD || isOutside(this)
+	if ((intensity < VISIBILITY_THRESHOLD) || isOutside(this)
 		|| (!left && !right && !(virtual_neighbors_left.size()) && !(virtual_neighbors_right.size()))) {
 		kill_marked = 1;
 	}

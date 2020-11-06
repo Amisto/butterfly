@@ -101,25 +101,27 @@ void Solver::initExplosion(Vector2 pos) {
 void Solver::step() {
 	for (int node = 0; node < nodesNum; node++) {
 		int encounters = 0;
-		encounters += checkObstacles(node);
-		encounters += checkDots(node);
+		if (nodes[node]->getTEncounter() == INFINITY) {
+			encounters += checkObstacles(node);
+			if (nodes[node]->getRight()) {
+				encounters += checkDots(node);
+			}
 
-		if (encounters <= 0) {
-			nodes[node]->setTEncounter(-1);
+			if (!encounters) {
+				nodes[node]->setTEncounter(-1);
+			}
 		}
 	}
 
 	double timeStep = DT_DIGITIZATION * T_MULTIPLIER;
 	for (int node = 0; node < nodesNum; node++) {
-		if (nodes[node]->getTEncounter() > -1) {
+		if (nodes[node]->getTEncounter() > -0.5) {
 			timeStep = std::min(timeStep, nodes[node]->getTEncounter());
 		}
 	}
-
 	for (int node = 0; node < nodesNum; node++) {
 		nodes[node]->update(timeStep, obstacles[nodes[node]->getMaterial()].getCRel());
 	}
-
 	handleReflection();
 	fixNodes();
 
