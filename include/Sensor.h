@@ -3,6 +3,7 @@
 
 #include "Vector2.h"
 #include "Writing.h"
+#include <fstream>
 
 class Sensor {
  private:
@@ -16,7 +17,8 @@ class Sensor {
 	void setWriting(const std::vector<Writing> &writing);
 	void clearWriting();
 	void deteriorate();
-//	void writeToCSV(FILE *f_csv = NULL);
+	double signal(double t, double fc);
+	void writeToCSV(std::ostream &fout);
 
 };
 

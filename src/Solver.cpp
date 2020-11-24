@@ -134,7 +134,7 @@ void Solver::step() {
 	totalTime += timeStep;
 	while (totalTime > DT_DIGITIZATION) {
 		if (startTime < 0) {
-			//write to csv
+			writeToCSV();
 		}
 		totalTime -= DT_DIGITIZATION;
 		startTime -= DT_DIGITIZATION;
@@ -323,6 +323,14 @@ void Solver::deteriorate() {
 	}
 	for (auto &sensor : sensors) {
 		sensor.deteriorate();
+	}
+}
+void Solver::writeToCSV() {
+	for (auto &sensor : sensors) {
+		std::ofstream csvFile;
+		csvFile.open("1.csv");
+		sensor.writeToCSV(csvFile);
+		csvFile.close();
 	}
 }
 

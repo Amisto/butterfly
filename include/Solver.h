@@ -39,6 +39,7 @@ class Solver {
 	void initExplosion(Vector2 pos);
 	void step();
 	void fixNodes();
+	void writeToCSV();
 
 	~Solver();
 };
