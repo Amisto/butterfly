@@ -326,10 +326,10 @@ void Solver::deteriorate() {
 	}
 }
 void Solver::writeToCSV() {
-	for (auto &sensor : sensors) {
+	for (int i = 0; i < sensors.size(); i++) {
 		std::ofstream csvFile;
-		csvFile.open("1.csv");
-		sensor.writeToCSV(csvFile);
+		csvFile.open("data/baseline/Sensor" + std::to_string(i) + "/raw" + std::to_string(i) + ".csv");
+		sensors[i].writeToCSV(csvFile);
 		csvFile.close();
 	}
 }
