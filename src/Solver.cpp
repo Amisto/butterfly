@@ -55,6 +55,7 @@ void Solver::initDots() {
 	file.close();
 }
 
+int s = 0;
 void Solver::propagate() {
 	for (int i = 0; i < SENSORS; i++) {
 		double x = X / 2 - DX_SENSORS * (SENSORS / 2 - i);
@@ -64,11 +65,17 @@ void Solver::propagate() {
 		sensors.push_back(sensor);
 	}
 	for (auto &sensor : sensors) {
+		std::ofstream csvFile;
+		csvFile.open("data/baseline/Sensor" + std::to_string(s) + "/raw" + std::to_string(s) + ".csv");
+		csvFile<<"";
+		csvFile.close();
 		initExplosion(sensor.getPos());
 		resetTime();
 		while (finishTime > 0) {
 			step();
 		}
+		s++;
+		std::cout<<"SENSOR "<<s<<std::endl;
 	}
 }
 
@@ -200,10 +207,9 @@ int Solver::checkDots(int node) {
 
 			std::vector<Writing> writing = sensor.getWriting();
 			if (time < nodes[node]->getTEncounter()) {
-				writing.push_back(Writing(-time, nodes[node]->getIntensity(),
-										  1.0 / nodes[node]->getVelocity().getY()));
+				Writing w(-time, nodes[node]->getIntensity(), 1.0 / nodes[node]->getVelocity().getY());
+				sensor.addWriting(w);
 			}
-			sensor.setWriting(writing);
 		}
 	}
 
@@ -325,12 +331,14 @@ void Solver::deteriorate() {
 		sensor.deteriorate();
 	}
 }
+
 void Solver::writeToCSV() {
+	std::ofstream csvFile;
+	csvFile.open("data/baseline/Sensor" + std::to_string(s) + "/raw" + std::to_string(s) + ".csv", std::ios_base::app);
 	for (int i = 0; i < sensors.size(); i++) {
-		std::ofstream csvFile;
-		csvFile.open("data/baseline/Sensor" + std::to_string(i) + "/raw" + std::to_string(i) + ".csv");
 		sensors[i].writeToCSV(csvFile);
-		csvFile.close();
 	}
+	csvFile << std::endl;
+	csvFile.close();
 }
 
