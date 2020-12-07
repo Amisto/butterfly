@@ -133,7 +133,7 @@ double Node::getTime(double dist, double c_rel) const {
 	if (material >= 0) {
 		return fabs(dist / c_rel);
 	} else {
-		return dist;
+		return fabs(dist);
 	}
 }
 
@@ -141,9 +141,13 @@ void Node::update(double timeStep, double c_rel) {
 	pos.setX(pos.getX() + velocity.getX() * timeStep * (material >= 0 ? c_rel : 1.0));
 	pos.setY(pos.getY() + velocity.getY() * timeStep * (material >= 0 ? c_rel : 1.0));
 
-	if ((t_encounter >= -0.5) && (t_encounter != INFINITY)) {
-		t_encounter -= timeStep;
+//	if ((t_encounter >= -0.5) && (t_encounter != INFINITY)) {
+//		t_encounter -= timeStep;
+//	}
+	if ((t_encounter < -0.5) || (t_encounter == INFINITY)) {
+		return;
 	}
+	t_encounter -= timeStep;
 }
 
 Node Node::getReflected(Obstacle obstacle) {
@@ -212,7 +216,7 @@ void Node::killLeft() {
 		if (virtual_neighbors_left[j]) {
 			for (int k = 0; k < virtual_neighbors_left[j]->virtual_neighbors_right.size(); k++) {
 				if (virtual_neighbors_left[j]->virtual_neighbors_right[k] == this) {
-					delete virtual_neighbors_left[j]->virtual_neighbors_right[k];
+//					delete virtual_neighbors_left[j]->virtual_neighbors_right[k];
 					virtual_neighbors_left[j]->virtual_neighbors_right[k] = NULL;
 				}
 			}
@@ -225,7 +229,7 @@ void Node::killRight() {
 		if (virtual_neighbors_right[j]) {
 			for (int k = 0; k < virtual_neighbors_right[j]->virtual_neighbors_left.size(); k++) {
 				if (virtual_neighbors_right[j]->virtual_neighbors_left[k] == this) {
-					delete virtual_neighbors_right[j]->virtual_neighbors_left[k];
+//					delete virtual_neighbors_right[j]->virtual_neighbors_left[k];
 					virtual_neighbors_right[j]->virtual_neighbors_left[k] = NULL;
 				}
 			}

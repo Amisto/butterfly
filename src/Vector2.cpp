@@ -70,9 +70,17 @@ bool isPointInRect(const Vector2 &P, const Vector2 &A, const Vector2 &B, const V
 	return (Area1 == Area2 && Area2 == Area3 && Area3 == Area4);
 }
 
-double distanceToSegment(const Vector2 &A, const Vector2 &B, const Vector2 &C) {
-	Vector2 O = {(A.getX() + B.getX()) / 2, (A.getY() + B.getY()) / 2};
-	double dist = length(O, C);
+//  nodes[node]->getPos(), nodes[node]->getRight()->getPos(), dots[i].getPos()
+//double distanceToSegment(const Vector2 &A, const Vector2 &B, const Vector2 &C) {
+//	Vector2 O = {(A.getX() + B.getX()) / 2, (A.getY() + B.getY()) / 2};
+//	double dist = length(O, C);
+//	return dist;
+//}
+
+double distanceToSegment(const Vector2 &a, const Vector2 &b, const Vector2 &va, const Vector2 &vb, const Vector2 &c){
+//	double t2 = (va.x * (a.y - b.y) + va.y * (b.x - a.x)) / (va.x * vb.y - va.y * vb.y);
+	Vector2 o = {(a.getX() + b.getX())/2, (a.getX() + b.getY())/2};//{b.x + vb.x * t2, b.y + vb.y * t2};
+	double dist = length(o, c);
 	return dist;
 }
 

@@ -65,17 +65,25 @@ void Solver::propagate() {
 		sensors.push_back(sensor);
 	}
 	for (auto &sensor : sensors) {
+		std::cout << "SENSOR " << s << std::endl;
 		std::ofstream csvFile;
 		csvFile.open("data/baseline/Sensor" + std::to_string(s) + "/raw" + std::to_string(s) + ".csv");
-		csvFile<<"";
+		csvFile << "";
 		csvFile.close();
 		initExplosion(sensor.getPos());
 		resetTime();
+		int h = 0;
 		while (finishTime > 0) {
+			std::cout << "iter: " << h << std::endl;
 			step();
+			h++;
+//			if (h > 12450) {
+//				break;
+//			}
+//			break;
 		}
 		s++;
-		std::cout<<"SENSOR "<<s<<std::endl;
+		break;
 	}
 }
 
@@ -106,6 +114,9 @@ void Solver::initExplosion(Vector2 pos) {
 }
 
 void Solver::step() {
+//	std::cout << "nodes 6070 pos: " << nodes[6070]->getPos().getX() << " " << nodes[6070]->getPos().getY() << std::endl;
+//	std::cout << "nodes 6070 vel: " << nodes[6070]->getVelocity().getX() << " " << nodes[6070]->getVelocity().getY() << std::endl;
+
 	for (int node = 0; node < nodesNum; node++) {
 		int encounters = 0;
 		if (nodes[node]->getTEncounter() == INFINITY) {
@@ -120,18 +131,38 @@ void Solver::step() {
 		}
 	}
 
+//	if (node == 4070) {
+//	std::cout << "now pos  " << nodes[4070]->getPos().getX() << " " << nodes[4070]->getPos().getY() << std::endl;
+//	std::cout << "now vel  " << nodes[4070]->getVelocity().getX() << " " << nodes[4070]->getVelocity().getY()
+//			  << std::endl;
+//
+//	std::cout << "992 now pos  " << nodes[992]->getPos().getX() << " " << nodes[992]->getPos().getY() << std::endl;
+//	std::cout << "992 now vel  " << nodes[992]->getVelocity().getX() << " " << nodes[992]->getVelocity().getY()
+//			  << std::endl;
+//	std::cout<< "992 time "<<nodes[992]->getTEncounter()<<std::endl;
+//	std::cout << "right pos  " << nodes[4070]->getRight()->getPos().getX() << " "
+//			  << nodes[4070]->getRight()->getPos().getY() << std::endl;
+//		std::cout << "right vel  " << nodes[4070]->getRight()->getVelocity().getX() << " "
+//				  << nodes[4070]->getRight()->getVelocity().getY() << std::endl;
+//		std::cout << "next pos  " << nodeNextPos.getX() << " " << nodeNextPos.getY() << std::endl;
+//	}
+
 	double timeStep = DT_DIGITIZATION * T_MULTIPLIER;
 	for (int node = 0; node < nodesNum; node++) {
-		if (nodes[node]->getTEncounter() > -0.5) {
-			timeStep = std::min(timeStep, nodes[node]->getTEncounter());
+		if (nodes[node]->getTEncounter() > ZERO && nodes[node]->getTEncounter() < timeStep) {
+			timeStep = nodes[node]->getTEncounter();
+			std::cout << "new time node: " << node << " time: " << timeStep << std::endl;
 		}
+	}
+	if (timeStep > DT_DIGITIZATION * T_MULTIPLIER) {
+		timeStep = DT_DIGITIZATION * T_MULTIPLIER;
 	}
 	for (int node = 0; node < nodesNum; node++) {
 		nodes[node]->update(timeStep, obstacles[nodes[node]->getMaterial()].getCRel());
 	}
 	handleReflection();
 	fixNodes();
-
+	std::cout << "timeStep " << timeStep << std::endl << std::endl;
 	deteriorationTime += timeStep;
 	while (deteriorationTime > DT_DETERIORATION) {
 		deteriorate();
@@ -163,7 +194,8 @@ int Solver::checkObstacles(int node) {
 
 				time = nodes[node]->getTime(dist, obstacles[nodes[node]->getMaterial()].getCRel());
 
-				if (time < nodes[node]->getTEncounter()) {
+				if ((time < nodes[node]->getTEncounter()) && (time>ZERO)) {
+//					std::cout << "obstacles " << time << std::endl;
 					nodes[node]->setTEncounter(time);
 					nodes[node]->setObstacleNumber(i);
 					nodes[node]->setVerticeNumber(j);
@@ -176,6 +208,7 @@ int Solver::checkObstacles(int node) {
 }
 
 int Solver::checkDots(int node) {
+//	std::cout << "node " << node << std::endl;
 	int encounters = 0;
 	double time = INFINITY;
 
@@ -183,14 +216,21 @@ int Solver::checkDots(int node) {
 	Vector2 rightNodePos = nodes[node]->getRight()->getPosAfterStep(10);
 	Vector2 nodeNextPos = nodes[node]->getPosAfterStep(1000);
 	Vector2 rightNodeNextPos = nodes[node]->getRight()->getPosAfterStep(1000);
-
+	// point_in_rect(dots[i].pos, n_now, r_now, r_next, n_next)
 	for (int i = 0; i < DOTS; i++) {
-		if (isPointInRect(dots[i].getPos(), nodePos, rightNodePos, nodeNextPos, rightNodeNextPos)) {
-			double dist = distanceToSegment(nodes[node]->getPos(), nodes[node]->getRight()->getPos(), dots[i].getPos());
+		if (isPointInRect(dots[i].getPos(), nodePos, rightNodePos, rightNodeNextPos, nodeNextPos)) {
+//			std::cout << "checkDots " << node << std::endl;
+
+			double dist = distanceToSegment(nodes[node]->getPos(),
+											nodes[node]->getRight()->getPos(),
+											nodes[node]->getVelocity(),
+											nodes[node]->getRight()->getVelocity(),
+											dots[i].getPos());
 
 			time = nodes[node]->getTime(dist, obstacles[nodes[node]->getMaterial()].getCRel());
 
-			if (time < nodes[node]->getTEncounter()) {
+			if ((time < nodes[node]->getTEncounter()) && (time>ZERO)) {
+//				std::cout << "dots " << time << std::endl;
 				nodes[node]->setTEncounter(time);
 				nodes[node]->setObstacleNumber(-1);
 				nodes[node]->setVerticeNumber(i);
@@ -198,9 +238,22 @@ int Solver::checkDots(int node) {
 			}
 		}
 	}
+	if (node == 4070) {
+//		std::cout << "right vel  " << nodes[node]->getRight()->getVelocity().getX() << " "
+//				  << nodes[node]->getRight()->getVelocity().getY() << std::endl;
+//		std::cout << "now pos  " << nodePos.getX() << " " << nodePos.getY() << std::endl;
+//		std::cout << "next pos  " << nodeNextPos.getX() << " " << nodeNextPos.getY() << std::endl;
+	}
 	for (auto &sensor : sensors) {
-		if (isPointInRect(sensor.getPos(), nodePos, rightNodePos, nodeNextPos, rightNodeNextPos)) {
-			double dist = distanceToSegment(nodes[node]->getPos(), nodes[node]->getRight()->getPos(),
+		int k = 0;
+
+		if (isPointInRect(sensor.getPos(), nodePos, rightNodePos, rightNodeNextPos, nodeNextPos)) {
+//			std::cout << "sensor " << k << std::endl;
+			k++;
+			double dist = distanceToSegment(nodes[node]->getPos(),
+											nodes[node]->getRight()->getPos(),
+											nodes[node]->getVelocity(),
+											nodes[node]->getRight()->getVelocity(),
 											sensor.getPos());
 
 			time = nodes[node]->getTime(dist, obstacles[nodes[node]->getMaterial()].getCRel());
@@ -208,6 +261,8 @@ int Solver::checkDots(int node) {
 			std::vector<Writing> writing = sensor.getWriting();
 			if (time < nodes[node]->getTEncounter()) {
 				Writing w(-time, nodes[node]->getIntensity(), 1.0 / nodes[node]->getVelocity().getY());
+				std::cout << std::setprecision(2) << "writing: " << nodes[node]->getIntensity() << " "
+						  << 1.0 / nodes[node]->getVelocity().getY() << std::endl;
 				sensor.addWriting(w);
 			}
 		}
@@ -225,6 +280,7 @@ void Solver::handleReflection() {
 				Node refracted = nodes[i]->getRefracted(obstacles[nodes[i]->getObstacleNumber()]);
 
 				if (reflected.getIntensity() == -1) {
+//					std::cout << "marked " << i << std::endl;
 					nodes[i]->setMarkedForTheKill(1);
 				} else {
 					// real neighbors always turn to ghost ones -
@@ -249,6 +305,7 @@ void Solver::handleReflection() {
 					nodes[i]->restoreWavefront(reflected, refracted);
 				}
 			} else if (nodes[i]->getObstacleNumber() == -1) {    // encountering a dot obstacle
+//				std::cout << "encountering a dot obstacle" << i << std::endl;
 				double sina = -nodes[i]->getVelocity().getY();
 				double cosa = -nodes[i]->getVelocity().getX();
 				double alpha = cosa > 0 ? asin(sina) : M_PI - asin(sina);
@@ -280,11 +337,15 @@ void Solver::fixNodes() {
 			for (auto &sensor : sensors) {
 				for (int j = 0; j < sensor.getWriting().size(); j++) {
 					if (sensor.getWriting()[j].getNode() == nodes[node]) {
-						sensor.clearWriting();
+						std::vector<Writing> wr = sensor.getWriting();
+						wr[j].setNode(NULL);
+						sensor.setWriting(wr);
+//						sensor.clearWriting();
 					}
 				}
 			}
-			delete nodes[node];
+//			delete nodes[node];
+//			std::cout << "delete " << node << std::endl;
 			nodes[node] = NULL;
 		}
 	}
@@ -299,15 +360,18 @@ void Solver::fixNodes() {
 			if (!nodes[i]) {
 				nodes[i] = nodes[--nodesNum];
 				cleared = false;
+//				std::cout << "false " << nodesNum << std::endl;
 				break;
 			}
 		}
 	}
 
+	std::cout << "cleared " << nodesNum << std::endl;
+
 	for (int node = 0; node < nodesNum; node++) {
-		if (nodes[node]) {
+//		if (nodes[node]) {
 			nodes[node]->clearNeighbours();
-		}
+//		}
 	}
 }
 Solver::~Solver() {
@@ -333,6 +397,7 @@ void Solver::deteriorate() {
 }
 
 void Solver::writeToCSV() {
+	std::cout << "write to csv" << std::endl;
 	std::ofstream csvFile;
 	csvFile.open("data/baseline/Sensor" + std::to_string(s) + "/raw" + std::to_string(s) + ".csv", std::ios_base::app);
 	for (int i = 0; i < sensors.size(); i++) {
