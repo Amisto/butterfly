@@ -106,6 +106,7 @@ Vector2 getRefracted(const Vector2 &A, const Vector2 &B, const Vector2 &Velocity
 	double sinA = sinG * cosF - sinF * cosG;
 	double cosB = cRel * cosA;
 	if (cosB > 1.0 || cosB < -1.0) {
+		*intensity = -1;
 		return Vector2();
 	}
 	double sinB = sqrt(1 - cosB * cosB);

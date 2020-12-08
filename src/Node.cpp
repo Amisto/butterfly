@@ -152,17 +152,19 @@ void Node::update(double timeStep, double c_rel) {
 
 Node Node::getReflected(Obstacle obstacle) {
 	double i = intensity;
-	return Node(Vector2(1.00015 * velocity.getX(), 1.00015 * velocity.getY()),
-				::getReflected(obstacle.getPos(vertice_number), obstacle.getPos(vertice_number + 1),
-							   velocity, obstacle.getCRel(), &i),
+	Vector2 vel = ::getReflected(obstacle.getPos(vertice_number), obstacle.getPos(vertice_number + 1),
+									velocity, obstacle.getCRel(), &i);
+	return Node(Vector2(pos.getX() - (1.00015 * velocity.getX()), pos.getY() - (1.00015 * velocity.getY())),
+				vel,
 				i);
 }
 
 Node Node::getRefracted(Obstacle obstacle) {
 	double i = intensity;
-	return Node(Vector2(1.00015 * velocity.getX(), 1.00015 * velocity.getY()),
-				::getRefracted(obstacle.getPos(vertice_number), obstacle.getPos(vertice_number + 1),
-							   velocity, obstacle.getCRel(), &i),
+	Vector2 vel = ::getRefracted(obstacle.getPos(vertice_number), obstacle.getPos(vertice_number + 1),
+								 velocity, obstacle.getCRel(), &i);
+	return Node(Vector2(pos.getX() + (1.00015 * velocity.getX()), pos.getY() + (1.00015 * velocity.getY())),
+				vel,
 				i);
 }
 
@@ -212,12 +214,25 @@ void Node::restoreWavefront(Node &reflected, Node &refracted) {
 }
 
 void Node::killLeft() {
+	std::cout<<"kill left "<<std::endl;
 	for (int j = 0; j < virtual_neighbors_left.size(); j++) {
 		if (virtual_neighbors_left[j]) {
+			std::cout<<"virtual_neighbors_left[j]"<<std::endl;
 			for (int k = 0; k < virtual_neighbors_left[j]->virtual_neighbors_right.size(); k++) {
-				if (virtual_neighbors_left[j]->virtual_neighbors_right[k] == this) {
+				if(virtual_neighbors_left[j]->virtual_neighbors_right.size() >= k) {
+					std::cout<<"virtual_neighbors_right if"<<std::endl;
+					std::cout<<"virtual_neighbors_right if1"<<std::endl;
+
+					if(virtual_neighbors_left[j]->virtual_neighbors_right.at(k) ) {
+						std::cout << "yees" << std::endl;
+						if (virtual_neighbors_left[j]->virtual_neighbors_right[k] == this) {
+							std::cout << "this[j]" << std::endl;
+
 //					delete virtual_neighbors_left[j]->virtual_neighbors_right[k];
-					virtual_neighbors_left[j]->virtual_neighbors_right[k] = NULL;
+							virtual_neighbors_left[j]->virtual_neighbors_right[k] = NULL;
+						}
+					}
+
 				}
 			}
 		}
@@ -225,12 +240,17 @@ void Node::killLeft() {
 }
 
 void Node::killRight() {
+	std::cout<<"kill right "<<std::endl;
 	for (int j = 0; j < virtual_neighbors_right.size(); j++) {
 		if (virtual_neighbors_right[j]) {
 			for (int k = 0; k < virtual_neighbors_right[j]->virtual_neighbors_left.size(); k++) {
-				if (virtual_neighbors_right[j]->virtual_neighbors_left[k] == this) {
+				if(virtual_neighbors_right[j]->virtual_neighbors_left.size() >= k) {
+					if(virtual_neighbors_right[j]->virtual_neighbors_left[k]) {
+						if (virtual_neighbors_right[j]->virtual_neighbors_left[k] == this) {
 //					delete virtual_neighbors_right[j]->virtual_neighbors_left[k];
-					virtual_neighbors_right[j]->virtual_neighbors_left[k] = NULL;
+							virtual_neighbors_right[j]->virtual_neighbors_left[k] = NULL;
+						}
+					}
 				}
 			}
 		}
@@ -238,20 +258,23 @@ void Node::killRight() {
 }
 
 void Node::checkInvalid() {
+//	std::cout<<"check "<<std::endl;
 	if ((intensity < VISIBILITY_THRESHOLD) || isOutside(this)
 		|| (!left && !right && !(virtual_neighbors_left.size()) && !(virtual_neighbors_right.size()))) {
+		//std::cout<<"invalid "<<std::endl;
 		kill_marked = 1;
 	}
 
-	if (kill_marked) {
+	if (kill_marked > 0) {
+		//std::cout<<"yep, invalid "<<std::endl;
 		if (left) {
 			left->right = NULL;
 		}
 		if (right) {
 			right->left = NULL;
 		}
-		killLeft();
-		killRight();
+		//killLeft();
+		//killRight();
 		virtual_neighbors_left.clear();
 		virtual_neighbors_right.clear();
 	}

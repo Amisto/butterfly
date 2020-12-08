@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Sensor.h"
 #define SENSORS                 32
 #define DT_WIDTH                208.0e-1//37.5//0.0000021               
@@ -37,9 +38,12 @@ void Sensor::writeToCSV(std::ostream &fout) {
 	double signal = 0;
 	for (auto &w : writing) {
 		if (w.getTime() > 0) {
-			signal += w.getBrightness() * 1;
+			signal += w.getBrightness() * this->signal(w.getTime(), w.getFrequencyCorrection());
 		}
 		w.setTime(w.getTime() + DT_DIGITIZATION);
+	}
+	if(signal>0) {
+		std::cout << signal << " " << std::endl;
 	}
 	fout << std::setprecision(2) << signal << " ";
 
